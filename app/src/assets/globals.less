@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'normalize.css';
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --background-light: 0 0% 100%;
+    --background-dark: 0 0% 0%;
+    --background-hover: 5 0 98%;
+    --background-active: 5 0 96%;
+    --background-container: 0, 0%, 97%, 0.9;
+    --background-container-hover: 0, 0%, 97%, 0.95;
+    --foreground: 240 10% 3.9%;
+
+    --card: 0 0% 100%;
+    --card-hover: 0 0% 97%;
+    --card-active: 0 0% 94.5%;
+    --card-foreground: 240 10% 3.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 240 5.9% 97.5%;
+    --secondary-foreground: 240 5.9% 10%;
+
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+
+    --accent: 240 4.8% 95.9%;
+    --accent-secondary: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+
+    --destructive: 0 67.22% 50.59%;
+    --destructive-foreground: 0 0% 98%;
+
+    --success: 120 100% 50%;
+    --success-foreground: 0 0% 98%;
+
+    --failure: 0 67.22% 50.59%;
+    --failure-foreground: 0 0% 98%;
+
+    --border: 240 5.9% 90%;
+    --border-hover: 240 5.9% 85%;
+    --border-active: 240 5.9% 80%;
+
+    --input: 240 5.9% 90%;
+    --input-unread: 240 5.9% 50%;
+    --ring: 240 5% 64.9%;
+
+    --text: 0 0% 0%;
+    --text-light: 0 0% 100%;
+    --text-dark: 0 0% 100%;
+    --text-secondary: 0 0% 35%;
+    --text-unread: 0 0% 50%;
+    --text-secondary-dark: 0 0% 80%;
+
+    --selection: 212 100% 41%;
+    --selection-foreground: 0 0% 98%;
+
+    --radius: 0.5rem;
+
+    --shadow: #00000005;
+
+    --gold: 40 100% 50%;
+    --gold-foreground: 35 100% 40%;
+
+    --link: 210 100% 63%;
+    --error: 20 80% 50%;
+
+    --anim-bar: no-repeat linear-gradient(#333 0 0);
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --background-hover: 0 0% 7.8%;
+    --background-active: 0 0% 13.7%;
+    --background-container: 0, 0%, 5%, 0.9;
+    --background-container-hover: 0, 0%, 5%, 0.95;
+    --foreground: 210 40% 98%;
+
+    --card: 240 10% 3.9%;
+    --card-hover: 240 11% 12.5%;
+    --card-active: 240 9.5% 19%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 0 0 10%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 240 3.7% 15.9%;
+    --accent-secondary: 240 5% 15.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 240 3.7% 12.9%;
+    --border-hover: 240 3.7% 17.9%;
+    --border-active: 240 3.7% 25.9%;
+    --input: 240 3.7% 15.9%;
+    --input-unread: 240 3.7% 50%;
+    --ring: 240 4.9% 83.9%;
+    --text: 0 0% 100%;
+    --text-secondary: 0 0% 80%;
+    --text-unread: 0 0% 50%;
+
+    --shadow: #ffffff05;
+    --anim-bar: no-repeat linear-gradient(#ccc 0 0);
+  }
+
+  [type='text']:focus, input:where(:not([type])):focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus {
+    @apply border-border;
+  }
+}
+
+* {
+  --tw-ring-color: none !important;
+}
+
+.ui-input:-webkit-autofill,
+.ui-input:-moz-autofill,
+.ui-input:-ms-autofill,
+.ui-input:-o-autofill,
+.ui-input:autofill {
+  background: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  transition: background-color 5000s ease-in-out 0s;
+  caret-color: hsl(var(--foreground)) !important;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

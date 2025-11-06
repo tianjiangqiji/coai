@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Ccode Web</title>
+    <meta name="keywords" content="Ccode, ccode, ChatNio, chatnio">
+    <meta name="description" content="Ccode Web - A powerful AI platform supporting 70+ models, knowledge base management and API distribution. Featuring popular models like ChatGPT, Claude and more for seamless AI interactions.">
+    <meta name="theme-color" content="#000000">
+    <meta itemprop="image" content="/favicon.ico">
+    <link rel="manifest" href="/site.webmanifest">
+    <script src="/workbox.js" defer></script>
+    <style>
+        html, body, #root {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #index-loading {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            html[data-theme="system"] #index-loading {
+                background-color: #000;
+            }
+        }
+
+        html[data-theme="dark"] #index-loading {
+            background-color: #000;
+        }
+
+        .loading-icon {
+            width: 48px;
+            height: 48px;
+            background-image: url('/favicon.ico');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        @media (min-width: 768px) {
+            .loading-icon {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-bar::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 40%;
+            background: #eee;
+            animation: loading 1.5s infinite ease-in-out;
+            border-radius: 2px;
+        }
+
+        @keyframes loading {
+            0% {
+                left: -40%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+    </style>
+    <script>
+        // Set theme based on localStorage and system preference
+        const theme = localStorage.getItem('theme') || 'system';
+        document.documentElement.setAttribute('data-theme', theme);
+        
+        // Apply theme immediately to prevent flash
+        if (theme === 'system') {
+            const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.classList.toggle('dark', isDark);
+        } else {
+            document.documentElement.classList.toggle('dark', theme === 'dark');
+        }
+    </script>
+  </head>
+  <body>
+    <div id="root">
+      <div id="index-loading">
+        <div class="loading-icon"></div>
+        <div class="loading-bar"></div>
+      </div>
+    </div>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
