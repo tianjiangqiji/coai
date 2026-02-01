@@ -269,12 +269,7 @@ func ExtractImages(data string, includeBase64 bool) (content string, images []st
 		images = ext
 	}
 
-	content = data
-	for _, image := range images {
-		content = strings.ReplaceAll(content, image, "")
-	}
-
-	return content, images
+	return data, images
 }
 
 func ExtractImagesFromMarkdown(data string) (images []string) {

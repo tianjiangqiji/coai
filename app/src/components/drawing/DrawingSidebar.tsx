@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -153,9 +153,11 @@ export default function DrawingSidebar({
   const [prompt, setPrompt] = useState<string>("");
   const [image, setImage] = useState<string>("");
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const processFile = useCallback((file: File) => {
+    if (!file.type.startsWith("image/")) {
+      toast.error(t("drawing.invalidFileType") || "请上传图片文件");
+      return;
+    }
 
     if (file.size > 1024 * 1024 * 4) {
       toast.error(t("drawing.imageTooLarge") || "图片大小不能超过 4MB");
@@ -166,9 +168,43 @@ export default function DrawingSidebar({
     reader.onload = (event) => {
       const base64 = event.target?.result as string;
       setImage(base64);
+      setMode("edit"); // 自动切换到编辑模式
     };
     reader.readAsDataURL(file);
+  }, [t]);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) processFile(file);
   };
+
+  const onPaste = useCallback((e: React.ClipboardEvent) => {
+    const items = e.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf("image") !== -1) {
+        const file = items[i].getAsFile();
+        if (file) processFile(file);
+      }
+    }
+  }, [processFile]);
+
+  const [isDragging, setIsDragging] = useState(false);
+  const onDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  }, []);
+
+  const onDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  }, []);
+
+  const onDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) processFile(file);
+  }, [processFile]);
 
   const isDalleModel = useMemo(() => {
     return selectedId === "gpt-image-1-vip" || selectedId === "sora_image";
@@ -262,10 +298,14 @@ export default function DrawingSidebar({
 
   return (
     <motion.div
-      className={cn("sidebar drawing-sidebar", open && "open")}
+      className={cn("sidebar drawing-sidebar", open && "open", isDragging && "dragging-border")}
       initial={{ opacity: 0, x: -24 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
+      onPaste={onPaste}
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
     >
       <div className="drawing-sidebar-top">
         <div className="drawing-sidebar-header">

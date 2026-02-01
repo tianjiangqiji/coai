@@ -34,7 +34,7 @@ export default function Image({
 
   const filename = getFilenameFromURL(src) || "unknown";
   const description = alt || filename;
-  const isBase64Image = src?.startsWith('data:image');
+  const isBase64Image = src?.startsWith("data:image");
 
   const imgRef = useRef<HTMLImageElement>(null);
   const [state, setState] = React.useState<ImageStateType>(ImageState.Loading);

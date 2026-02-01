@@ -158,8 +158,9 @@ func processPersistentChatSession(db *sql.DB, cache *redis.Client, user *auth.Us
 	if session.UserID != -1 {
 		if instance := conversation.LoadConversation(db, session.UserID, session.ConversationID); instance != nil {
 			shouldSave := true
-			if instance.GetMessageLength() > 0 {
-				latest := instance.GetMessageById(instance.GetMessageLength() - 1)
+			messages := instance.GetMessage()
+			if len(messages) > 0 {
+				latest := messages[len(messages)-1]
 				if latest.Role == globals.Assistant && latest.Content == result {
 					shouldSave = false
 				}
