@@ -11,13 +11,13 @@ var SqliteEngine = false
 type batch struct {
 	Old   string
 	New   string
-	Regex bool
+	Regex *regexp.Regexp
 }
 
 func batchReplace(sql string, batch []batch) string {
 	for _, item := range batch {
-		if item.Regex {
-			sql = regexp.MustCompile(item.Old).ReplaceAllString(sql, item.New)
+		if item.Regex != nil {
+			sql = item.Regex.ReplaceAllString(sql, item.New)
 			continue
 		}
 
@@ -25,6 +25,11 @@ func batchReplace(sql string, batch []batch) string {
 	}
 	return sql
 }
+
+var (
+	textRegex = regexp.MustCompile(`TEXT\(\d+\)`)
+	realRegex = regexp.MustCompile(`REAL\(\d+,\d+\)`)
+)
 
 func PreflightSql(sql string) string {
 	// this is a simple way to adapt the sql to the sqlite engine
@@ -34,48 +39,43 @@ func PreflightSql(sql string) string {
 		if strings.Contains(sql, "DUPLICATE KEY") {
 			sql = batchReplace(sql, []batch{
 				{
-					"INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quota = ?",
-					"INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET quota = ?",
-					false,
+					Old: "INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quota = ?",
+					New: "INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET quota = ?",
 				},
 				{
-					"INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE used = ?",
-					"INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET used = ?",
-					false,
+					Old: "INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE used = ?",
+					New: "INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET used = ?",
 				},
 				{
-					"INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quota = quota + ?",
-					"INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET quota = quota + ?",
-					false,
+					Old: "INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quota = quota + ?",
+					New: "INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET quota = quota + ?",
 				},
 				{
-					"INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE used = used + ?",
-					"INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET used = used + ?",
-					false,
+					Old: "INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE used = used + ?",
+					New: "INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET used = used + ?",
 				},
 				{
-					"INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quota = quota - ?",
-					"INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET quota = quota - ?",
-					false,
+					Old: "INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quota = quota - ?",
+					New: "INSERT INTO quota (user_id, quota, used) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET quota = quota - ?",
 				},
 			})
 		}
 
 		sql = batchReplace(sql, []batch{
 			// KEYWORD REPLACEMENT
-			{`INT `, `INTEGER `, false},
-			{` AUTO_INCREMENT`, ` AUTOINCREMENT`, false},
-			{`DATETIME`, `TEXT`, false},
-			{`DECIMAL`, `REAL`, false},
-			{`MEDIUMTEXT`, `TEXT`, false},
-			{`VARCHAR`, `TEXT`, false},
+			{Old: `INT `, New: `INTEGER `},
+			{Old: ` AUTO_INCREMENT`, New: ` AUTOINCREMENT`},
+			{Old: `DATETIME`, New: `TEXT`},
+			{Old: `DECIMAL`, New: `REAL`},
+			{Old: `MEDIUMTEXT`, New: `TEXT`},
+			{Old: `VARCHAR`, New: `TEXT`},
 
 			// TEXT(65535) -> TEXT, REAL(10,2) -> REAL
-			{`TEXT\(\d+\)`, `TEXT`, true},
-			{`REAL\(\d+,\d+\)`, `REAL`, true},
+			{New: `TEXT`, Regex: textRegex},
+			{New: `REAL`, Regex: realRegex},
 
 			// UNIQUE KEY -> UNIQUE
-			{`UNIQUE KEY`, `UNIQUE`, false},
+			{Old: `UNIQUE KEY`, New: `UNIQUE`},
 		})
 	}
 
