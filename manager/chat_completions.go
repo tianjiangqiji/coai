@@ -100,6 +100,12 @@ func ChatRelayAPI(c *gin.Context) {
 		return
 	}
 
+	// 视频模型不再通过 /v1/chat/completions 处理，提示改用视频接口
+	if globals.IsVideoModel(form.Model) {
+		sendErrorResponse(c, fmt.Errorf("video models must use /v1/videos"), "invalid_request_error")
+		return
+	}
+
 	if form.Stream {
 		sendStreamTranshipmentResponse(c, form, messages, id, created, user, plan, usageDetail, thinkState)
 	} else {

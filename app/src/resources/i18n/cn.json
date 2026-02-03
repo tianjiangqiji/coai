@@ -1480,7 +1480,9 @@
     "viewImage": "查看图片",
     "imageLoadFailed": "图片 {{src}} 加载失败",
     "base64Image": "展开图片 Base64",
-    "base64ImageCollapse": "收起图片 Base64"
+    "base64ImageCollapse": "收起图片 Base64",
+    "viewVideo": "查看视频",
+    "videoLoadFailed": "视频 {{src}} 加载失败"
   },
   "bar": {
     "chat": "对话",

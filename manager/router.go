@@ -17,6 +17,8 @@ func Register(app *gin.RouterGroup) {
 	app.POST("/v1/chat/completions", ChatRelayAPI)
 	app.POST("/v1/images/generations", ImagesRelayAPI)
 	app.POST("/v1/images/edits", ImagesRelayAPI)
+	app.POST("/v1/videos", VideosRelayAPI)
+	app.GET("/v1/videos/:id/content", VideosContentRelayAPI)
 	app.GET("/v1/images/tasks", GetDrawingTasks)
 	app.POST("/v1/images/reset", ResetDrawingTasks)
 

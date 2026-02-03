@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { Moon, Sun, Monitor } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { Button } from "./ui/button";
 import { getMemory, setMemory } from "@/utils/memory.ts";
@@ -70,20 +71,23 @@ export function ThemeProvider({
 
   useEffect(() => {
     const root = window.document.documentElement;
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const handleChange = () => {
+      if (theme !== "system") return;
+      root.classList.remove("light", "dark");
+      root.classList.add(mediaQuery.matches ? "dark" : "light");
+    };
 
     root.classList.remove("light", "dark");
-
     if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light";
-
-      root.classList.add(systemTheme);
-      return;
+      root.classList.add(mediaQuery.matches ? "dark" : "light");
+      mediaQuery.addEventListener("change", handleChange);
+    } else {
+      root.classList.add(theme);
     }
 
-    root.classList.add(theme);
+    return () => mediaQuery.removeEventListener("change", handleChange);
   }, [theme]);
 
   const value = {
@@ -111,7 +115,13 @@ export const useTheme = () => {
   return context;
 };
 
-export function ThemeToggle({ className, size = "icon" }: { className?: string; size?: "icon" | "icon-md" }) {
+export function ThemeToggle({
+  className,
+  size = "icon",
+}: {
+  className?: string;
+  size?: "icon" | "icon-md";
+}) {
   const { theme, toggleTheme } = useTheme();
 
   return (
@@ -119,17 +129,41 @@ export function ThemeToggle({ className, size = "icon" }: { className?: string; 
       variant="outline"
       size={size}
       onClick={() => toggleTheme?.()}
-      className={`!m-0 ${className || ''}`}
+      className={`!m-0 ${className || ""}`}
     >
-      <Sun
-        className={`h-4 w-4 transition-all ${theme === "light" ? "relative rotate-0 scale-100" : "absolute -rotate-90 scale-0"}`}
-      />
-      <Moon
-        className={`h-4 w-4 transition-all ${theme === "dark" ? "relative rotate-0 scale-100" : "absolute rotate-90 scale-0"}`}
-      />
-      <Monitor
-        className={`h-4 w-4 transition-all ${theme === "system" ? "relative rotate-0 scale-100" : "absolute rotate-90 scale-0"}`}
-      />
+      <AnimatePresence mode="wait">
+        {theme === "light" ? (
+          <motion.div
+            key="sun"
+            initial={{ scale: 0.5, opacity: 0, rotate: -90 }}
+            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            exit={{ scale: 0.5, opacity: 0, rotate: 90 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Sun className="h-4 w-4" />
+          </motion.div>
+        ) : theme === "dark" ? (
+          <motion.div
+            key="moon"
+            initial={{ scale: 0.5, opacity: 0, rotate: -90 }}
+            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            exit={{ scale: 0.5, opacity: 0, rotate: 90 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Moon className="h-4 w-4" />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="monitor"
+            initial={{ scale: 0.5, opacity: 0, rotate: -90 }}
+            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            exit={{ scale: 0.5, opacity: 0, rotate: 90 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Monitor className="h-4 w-4" />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Button>
   );
 }

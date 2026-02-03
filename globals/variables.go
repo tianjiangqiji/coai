@@ -220,12 +220,13 @@ const (
 	SkylarkChat                  = "skylark-chat"
 	DeepseekV3                   = "deepseek-chat"
 	DeepseekR1                   = "deepseek-reasoner"
+	Sora2                        = "sora-2"
 	Sora2Landscape15s            = "Sora-2-Landscape-15s"
 	Sora2Portrait15s             = "Sora-2-Portrait-15s"
 )
 
 var OpenAIDalleModels = []string{
-	Dalle, Dalle2, Dalle3, GPTImage1Vip, SoraImage,
+	Dalle, Dalle2, Dalle3, GPTImage1, GPTImage1Vip, SoraImage,
 }
 
 var GoogleImagenModels = []string{
@@ -235,16 +236,18 @@ var GoogleImagenModels = []string{
 var defaultVisionModels = []string{
 	GPT4VisionPreview, GPT41106VisionPreview, GPT4Turbo, GPT4Turbo20240409, GPT4O, GPT4O20240513, // openai
 	GeminiProVision, Gemini15ProLatest, Gemini15FlashLatest, // gemini
-	Claude3,                             // anthropic
-	ZhiPuChatGLM4Vision,                 // chatglm
-	Sora2Landscape15s, Sora2Portrait15s, // sora2
-
+	Claude3,             // anthropic
+	ZhiPuChatGLM4Vision, // chatglm
 }
 
 var VisionModels = append([]string(nil), defaultVisionModels...)
 
 var VisionSkipModels = []string{
 	GPT4TurboPreview,
+}
+
+var VideoModels = []string{
+	Sora2, Sora2Landscape15s, Sora2Portrait15s,
 }
 
 func in(value string, slice []string) bool {
@@ -277,4 +280,8 @@ func SetVisionModels(models []string) {
 
 func IsVisionModel(model string) bool {
 	return in(model, VisionModels) && !in(model, VisionSkipModels)
+}
+
+func IsVideoModel(model string) bool {
+	return in(model, VideoModels)
 }

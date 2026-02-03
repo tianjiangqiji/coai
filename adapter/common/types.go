@@ -12,6 +12,20 @@ type RequestProps struct {
 	Proxy      globals.ProxyConfig `json:"-"`
 }
 
+type VideoProps struct {
+	RequestProps
+
+	Model         string `json:"model,omitempty"`
+	OriginalModel string `json:"-"`
+
+	Prompt         string  `json:"prompt"`
+	Seconds        *string `json:"seconds,omitempty"`
+	Size           *string `json:"size,omitempty"`
+	InputReference *string `json:"input_reference,omitempty"`
+
+	User string `json:"-"`
+}
+
 type ChatProps struct {
 	RequestProps
 
@@ -40,5 +54,9 @@ func (c *ChatProps) SetupBuffer(buf *utils.Buffer) {
 
 func CreateChatProps(props *ChatProps, buffer *utils.Buffer) *ChatProps {
 	props.SetupBuffer(buffer)
+	return props
+}
+
+func CreateVideoProps(props *VideoProps) *VideoProps {
 	return props
 }

@@ -1,7 +1,7 @@
 package adapter
 
 import (
-	"chat/adapter/common"
+	adaptercommon "chat/adapter/common"
 	"chat/globals"
 	"chat/utils"
 	"fmt"
@@ -43,6 +43,31 @@ func NewChatRequest(conf globals.ChannelConfig, props *adaptercommon.ChatProps, 
 			content := strings.Replace(err.Error(), "\n", "", -1)
 			globals.Warn(fmt.Sprintf("retrying chat request for %s (attempt %d/%d, error: %s)", props.OriginalModel, props.Current+1, retries, content))
 			return NewChatRequest(conf, props, hook)
+		}
+	}
+
+	return conf.ProcessError(err)
+}
+
+func NewVideoRequest(conf globals.ChannelConfig, props *adaptercommon.VideoProps, hook globals.Hook) error {
+	err := createVideoRequest(conf, props, hook)
+
+	retries := conf.GetRetry()
+	props.Current++
+
+	if IsAvailableError(err) {
+		if isQPSOverLimit(props.OriginalModel, err) {
+			// sleep for 0.5s to avoid qps limit
+
+			globals.Info(fmt.Sprintf("qps limit for %s, sleep and retry (times: %d)", props.OriginalModel, props.Current))
+			time.Sleep(500 * time.Millisecond)
+			return NewVideoRequest(conf, props, hook)
+		}
+
+		if props.Current < retries {
+			content := strings.Replace(err.Error(), "\n", "", -1)
+			globals.Info(fmt.Sprintf("retrying error request for %s (attempt %d/%d, error: %s)", props.OriginalModel, props.Current+1, retries, content))
+			return NewVideoRequest(conf, props, hook)
 		}
 	}
 

@@ -31,6 +31,7 @@ type Conversation struct {
 	PresencePenalty   *float32 `json:"presence_penalty,omitempty"`
 	FrequencyPenalty  *float32 `json:"frequency_penalty,omitempty"`
 	RepetitionPenalty *float32 `json:"repetition_penalty,omitempty"`
+	TaskID            string   `json:"task_id"`
 }
 
 type FormMessage struct {
@@ -231,6 +232,14 @@ func (c *Conversation) GetUserID() int64 {
 
 func (c *Conversation) SetId(id int64) {
 	c.Id = id
+}
+
+func (c *Conversation) GetTaskID() string {
+	return c.TaskID
+}
+
+func (c *Conversation) SetTaskID(id string) {
+	c.TaskID = id
 }
 
 func (c *Conversation) GetMessage() []globals.Message {

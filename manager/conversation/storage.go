@@ -16,8 +16,8 @@ func (c *Conversation) SaveConversation(db *sql.DB) bool {
 
 	data := utils.ToJson(c.GetMessage())
 	query := `
-		INSERT INTO conversation (user_id, conversation_id, conversation_name, data, model) VALUES (?, ?, ?, ?, ?)
-		ON DUPLICATE KEY UPDATE conversation_name = VALUES(conversation_name), data = VALUES(data)
+		INSERT INTO conversation (user_id, conversation_id, conversation_name, data, model, task_id) VALUES (?, ?, ?, ?, ?, ?)
+		ON DUPLICATE KEY UPDATE conversation_name = VALUES(conversation_name), data = VALUES(data), task_id = VALUES(task_id)
 	`
 
 	stmt, err := globals.PrepareDb(db, query)
@@ -31,7 +31,12 @@ func (c *Conversation) SaveConversation(db *sql.DB) bool {
 		}
 	}(stmt)
 
-	_, err = stmt.Exec(c.UserID, c.Id, c.Name, data, c.Model)
+	var taskID sql.NullString
+	if c.TaskID != "" {
+		taskID = sql.NullString{String: c.TaskID, Valid: true}
+	}
+
+	_, err = stmt.Exec(c.UserID, c.Id, c.Name, data, c.Model, taskID)
 	if err != nil {
 		globals.Info(fmt.Sprintf("execute error during save conversation: %s", err.Error()))
 		return false
@@ -54,17 +59,22 @@ func LoadConversation(db *sql.DB, userId int64, conversationId int64) *Conversat
 	}
 
 	var (
-		data  string
-		model interface{}
+		data   string
+		model  interface{}
+		taskID sql.NullString
 	)
 	err := globals.QueryRowDb(db, `
-		SELECT conversation_name, model, data FROM conversation
+		SELECT conversation_name, model, data, task_id FROM conversation
 		WHERE user_id = ? AND conversation_id = ?
-		`, userId, conversationId).Scan(&conversation.Name, &model, &data)
+		`, userId, conversationId).Scan(&conversation.Name, &model, &data, &taskID)
 	if value, ok := model.([]byte); ok {
 		conversation.Model = string(value)
 	} else {
 		conversation.Model = globals.GPT3Turbo
+	}
+
+	if taskID.Valid {
+		conversation.TaskID = taskID.String
 	}
 
 	if err != nil {
