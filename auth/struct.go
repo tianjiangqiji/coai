@@ -202,6 +202,14 @@ func HitGroup(db *sql.DB, user *User, group string) bool {
 	return GetGroup(db, user) == group
 }
 
+func GetUsernameString(db *sql.DB, user *User) string {
+	if user == nil {
+		return globals.AnonymousType
+	}
+
+	return user.Username
+}
+
 func HitGroups(db *sql.DB, user *User, groups []string) bool {
 	if utils.Contains(globals.AdminType, groups) {
 		if user != nil && user.IsAdmin(db) {

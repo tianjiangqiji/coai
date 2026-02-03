@@ -132,6 +132,56 @@ func createChatTask(
 			}
 		}()
 
+		if globals.IsVideoModel(model) {
+			props := adaptercommon.CreateVideoProps(&adaptercommon.VideoProps{
+				Model:  model,
+				Prompt: segment[len(segment)-1].Content,
+			})
+			props.User = auth.GetUsernameString(db, user)
+
+			var finalJobJson string
+			hit, err := channel.NewVideoRequestWithCache(
+				cache, buffer,
+				auth.GetGroup(db, user),
+				props,
+				func(data *globals.Chunk) error {
+					if data != nil && data.Content != "" {
+						if strings.HasPrefix(data.Content, "{") && strings.Contains(data.Content, "\"id\"") && strings.Contains(data.Content, "\"status\"") {
+							finalJobJson = data.Content
+							job, err := utils.UnmarshalString[RelayVideoJob](data.Content)
+							if err == nil && job.Id != "" && job.Status == "completed" {
+								backendUrl := channel.SystemInstance.GetBackend()
+								videoUrl := fmt.Sprintf("%s/v1/videos/%s/content", backendUrl, job.Id)
+								videoMarkdown := utils.GetVideoMarkdown(videoUrl, "video")
+
+								chunkChan <- partialChunk{Chunk: &globals.Chunk{Content: videoMarkdown}, End: false, Hit: false, Error: nil}
+								return nil
+							}
+						}
+					}
+
+					chunkChan <- partialChunk{Chunk: data, End: false, Hit: false, Error: nil}
+					return nil
+				},
+			)
+
+			if err == nil && finalJobJson != "" {
+				job, err := utils.UnmarshalString[RelayVideoJob](finalJobJson)
+				if err == nil && job.Id != "" {
+					globals.Debug(fmt.Sprintf("[video] saving task_id %s to conversation %d", job.Id, instance.GetId()))
+					instance.SetTaskID(job.Id)
+					if !instance.SaveConversation(db) {
+						globals.Warn(fmt.Sprintf("[video] failed to save conversation with task_id %s", job.Id))
+					} else {
+						globals.Debug(fmt.Sprintf("[video] successfully saved task_id %s to conversation %d", job.Id, instance.GetId()))
+					}
+				}
+			}
+
+			chunkChan <- partialChunk{Chunk: nil, End: true, Hit: hit, Error: err}
+			return
+		}
+
 		hit, err := channel.NewChatRequestWithCache(
 			cache, buffer,
 			auth.GetGroup(db, user),

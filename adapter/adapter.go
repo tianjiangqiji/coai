@@ -57,3 +57,19 @@ func createChatRequest(conf globals.ChannelConfig, props *adaptercommon.ChatProp
 
 	return fmt.Errorf("unknown channel type %s (channel #%d)", conf.GetType(), conf.GetId())
 }
+
+func createVideoRequest(conf globals.ChannelConfig, props *adaptercommon.VideoProps, hook globals.Hook) error {
+	props.Model = conf.GetModelReflect(props.OriginalModel)
+	props.Proxy = conf.GetProxy()
+
+	factoryType := conf.GetType()
+	if creator, ok := channelFactories[factoryType]; ok {
+		inst := creator(conf)
+		if v, ok := inst.(adaptercommon.VideoFactory); ok {
+			return v.CreateVideoRequest(props, hook)
+		}
+		return fmt.Errorf("video request not supported by channel type %s (channel #%d)", conf.GetType(), conf.GetId())
+	}
+
+	return fmt.Errorf("unknown channel type %s (channel #%d)", conf.GetType(), conf.GetId())
+}

@@ -11,6 +11,7 @@ import Label from "@/components/markdown/Label.tsx";
 import Link from "@/components/markdown/Link.tsx";
 import Code, { CodeProps } from "@/components/markdown/Code.tsx";
 import Image from "@/components/markdown/Image.tsx";
+import Video from "@/components/markdown/Video.tsx";
 
 type MarkdownProps = {
   children: string;
@@ -44,7 +45,18 @@ function MarkdownContent({
     return {
       p: Label,
       a: Link,
-      img: Image,
+      img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
+        if (props.alt === "video") {
+          return (
+            <Video
+              src={props.src || ""}
+              alt={props.alt}
+              className={props.className}
+            />
+          );
+        }
+        return <Image {...props} />;
+      },
       code: (props: CodeProps) => (
         <Code {...props} loading={loading} codeStyle={codeStyle} />
       ),

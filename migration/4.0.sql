@@ -1,0 +1,2 @@
+ALTER TABLE conversation
+    ADD COLUMN task_id VARCHAR(255) DEFAULT NULL;

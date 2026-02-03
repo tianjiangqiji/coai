@@ -171,6 +171,10 @@ func GetImageMarkdown(url string) string {
 	return fmt.Sprintf("![image](%s)", url)
 }
 
+func GetVideoMarkdown(url string, desc string) string {
+	return fmt.Sprintf("![%s](%s)", desc, url)
+}
+
 func GetBase64ImageMarkdown(b64 string, _desc ...string) string {
 	// Extracts the image type from base64 string (e.g., "data:image/png;base64,...") or defaults to png
 	var imageType = "png"
@@ -439,18 +443,24 @@ func SafeSplit(data string, sep string, seglen int) (res []string) {
 	}
 }
 
-func ToSecret(raw string) string {
+func HideSecret(raw string, length_ ...int) string {
 	// like `axVbeixvN` => `axVb*****`
+	length := 4
+	if len(length_) > 0 {
+		length = length_[0]
+	}
 
 	data := []rune(raw)
-	length := len(data)
-
-	if length < 4 {
-		return "****"
+	if len(data) <= length {
+		return strings.Repeat("*", len(data))
 	} else {
-		suffix := len(data) - 4
-		return string(data[:4]) + strings.Repeat("*", suffix)
+		suffix := len(data) - length
+		return string(data[:length]) + strings.Repeat("*", suffix)
 	}
+}
+
+func ToSecret(raw string) string {
+	return HideSecret(raw)
 }
 
 func ToMarkdownCode(lang string, code string) string {

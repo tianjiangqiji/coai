@@ -1342,7 +1342,9 @@
     "viewImage": "Views image",
     "imageLoadFailed": "Image {{src}} failed to load",
     "base64Image": "Expand Base64 image",
-    "base64ImageCollapse": "Collapse Picture Base64"
+    "base64ImageCollapse": "Collapse Picture Base64",
+    "viewVideo": "View video",
+    "videoLoadFailed": "Video {{src}} failed to load"
   },
   "login-action": "Sign in to enjoy more features",
   "anonymous": "please sign in here",

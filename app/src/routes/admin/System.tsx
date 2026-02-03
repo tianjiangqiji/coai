@@ -422,7 +422,7 @@ function Mail({ data, dispatch, onChange }: CompProps<MailState>) {
               value: e.target.value,
             })
           }
-          placeholder={`${t("admin.system.mailFrom")} <${data.username}@${location.hostname}>`}
+        placeholder={`${t("admin.system.mailFrom")} <${data.username}@${location.hostname}>`}
           className={cn("transition-all duration-300")}
         />
       </ParagraphItem>

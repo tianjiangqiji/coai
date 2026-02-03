@@ -112,3 +112,49 @@ func NewChatRequestWithCache(cache *redis.Client, buffer *utils.Buffer, group st
 	StoreCache(cache, hash, idx, buffer)
 	return false, nil
 }
+
+func NewVideoRequestWithCache(_ *redis.Client, buffer *utils.Buffer, group string, props *adaptercommon.VideoProps, hook globals.Hook) (bool, error) {
+	// TODO: Implement video request with cache
+
+	if len(props.OriginalModel) == 0 {
+		props.OriginalModel = props.Model
+	}
+
+	ticker := ConduitInstance.GetTicker(props.OriginalModel, group)
+	if ticker == nil || ticker.IsEmpty() {
+		return false, fmt.Errorf("cannot find channel for model %s", props.OriginalModel)
+	}
+
+	var err error
+	var times int = 0
+	for !ticker.IsDone() {
+		if channel := ticker.Next(); channel != nil {
+			times++
+			props.MaxRetries = utils.ToPtr(channel.GetRetry())
+			if err = adapter.NewVideoRequest(channel, props, hook); adapter.IsSkipError(err) {
+				globals.Debug(fmt.Sprintf(
+					"[channel] calling video request success (channel: %s, user: %s, model: %s, reflected-model: %s, secret: %s)",
+					channel.GetName(), props.User, props.OriginalModel, props.Model,
+					utils.HideSecret(channel.GetCurrentSecretValue(), 16),
+				))
+				return false, err
+			}
+
+			globals.Warn(fmt.Sprintf(
+				"[channel] caught error: %s (channel: %s, user: %s, model: %s, reflected-model: %s, secret: %s)",
+				err.Error(), channel.GetName(), props.User, props.OriginalModel, props.Model,
+				utils.HideSecret(channel.GetCurrentSecretValue(), 16),
+			))
+		}
+	}
+
+	if err == nil {
+		err = fmt.Errorf("channels are all used up (model: %s)", props.OriginalModel)
+	}
+
+	if adapter.IsAvailableError(err) {
+		globals.Info(fmt.Sprintf("[channel] request failed: %s (model: %s, user: %s, attempts: %d, all channels are used up)", err.Error(), props.OriginalModel, props.User, times))
+	}
+
+	return false, err
+}

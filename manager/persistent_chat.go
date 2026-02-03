@@ -11,6 +11,7 @@ import (
 	"chat/utils"
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
@@ -105,36 +106,99 @@ func processPersistentChatSession(db *sql.DB, cache *redis.Client, user *auth.Us
 	sm.UpdateSessionProgress(session.ID, "AI正在思考中...")
 
 	// 执行AI请求
-	_, err := channel.NewChatRequestWithCache(
-		cache, buffer,
-		auth.GetGroup(db, user),
-		adaptercommon.CreateChatProps(chatProps, buffer),
+	var err error
+	var finalJobJson string
+	if globals.IsVideoModel(req.Model) {
+		props := adaptercommon.CreateVideoProps(&adaptercommon.VideoProps{
+			Model:  req.Model,
+			Prompt: segment[len(segment)-1].Content,
+		})
+		props.User = auth.GetUsernameString(db, user)
 
-		// 处理流式响应的回调
-		func(data *globals.Chunk) error {
-			// 检查会话是否被取消
-			select {
-			case <-session.Context.Done():
-				return fmt.Errorf("session cancelled")
-			default:
-			}
+		_, err = channel.NewVideoRequestWithCache(
+			cache, buffer,
+			auth.GetGroup(db, user),
+			props,
+			func(data *globals.Chunk) error {
+				// 检查会话是否被取消
+				select {
+				case <-session.Context.Done():
+					return fmt.Errorf("session cancelled")
+				default:
+				}
 
-			// 更新进度
-			content := buffer.WriteChunk(data)
-			if content != "" {
-				sm.UpdateSessionProgress(session.ID, content)
-			}
+				if data != nil && data.Content != "" {
+					if strings.HasPrefix(data.Content, "{") && strings.Contains(data.Content, "\"id\"") && strings.Contains(data.Content, "\"status\"") {
+						finalJobJson = data.Content
+						job, err := utils.UnmarshalString[RelayVideoJob](data.Content)
+						if err == nil && job.Id != "" && job.Status == "completed" {
+							backendUrl := channel.SystemInstance.GetBackend()
+							videoUrl := fmt.Sprintf("%s/v1/videos/%s/content", backendUrl, job.Id)
+							videoMarkdown := utils.GetVideoMarkdown(videoUrl, "video")
 
-			// 发送到结果流
-			select {
-			case session.ResultStream <- data:
-			default:
-				// 如果通道满了，跳过
-			}
+							content := buffer.WriteChunk(&globals.Chunk{Content: videoMarkdown})
+							if content != "" {
+								sm.UpdateSessionProgress(session.ID, content)
+							}
 
-			return nil
-		},
-	)
+							select {
+							case session.ResultStream <- &globals.Chunk{Content: videoMarkdown}:
+							default:
+							}
+
+							return nil
+						}
+					}
+				}
+
+				// 更新进度
+				content := buffer.WriteChunk(data)
+				if content != "" {
+					sm.UpdateSessionProgress(session.ID, content)
+				}
+
+				// 发送到结果流
+				select {
+				case session.ResultStream <- data:
+				default:
+					// 如果通道满了，跳过
+				}
+
+				return nil
+			},
+		)
+	} else {
+		_, err = channel.NewChatRequestWithCache(
+			cache, buffer,
+			auth.GetGroup(db, user),
+			adaptercommon.CreateChatProps(chatProps, buffer),
+
+			// 处理流式响应的回调
+			func(data *globals.Chunk) error {
+				// 检查会话是否被取消
+				select {
+				case <-session.Context.Done():
+					return fmt.Errorf("session cancelled")
+				default:
+				}
+
+				// 更新进度
+				content := buffer.WriteChunk(data)
+				if content != "" {
+					sm.UpdateSessionProgress(session.ID, content)
+				}
+
+				// 发送到结果流
+				select {
+				case session.ResultStream <- data:
+				default:
+					// 如果通道满了，跳过
+				}
+
+				return nil
+			},
+		)
+	}
 
 	// 处理请求结果
 	if err != nil {
@@ -166,6 +230,12 @@ func processPersistentChatSession(db *sql.DB, cache *redis.Client, user *auth.Us
 				}
 			}
 			if shouldSave {
+				if finalJobJson != "" {
+					job, err := utils.UnmarshalString[RelayVideoJob](finalJobJson)
+					if err == nil && job.Id != "" {
+						instance.SetTaskID(job.Id)
+					}
+				}
 				instance.SaveResponse(db, result)
 			}
 		}
