@@ -117,11 +117,23 @@ func getUsersForm(db *sql.DB, page int64, search string) PaginationForm {
 func clearUserCache(cache *redis.Client) error {
 	ctx := context.Background()
 	iter := cache.Scan(ctx, 0, "nio:user:*", 100).Iterator()
+	var keys []string
 	for iter.Next(ctx) {
-		if err := cache.Del(ctx, iter.Val()).Err(); err != nil {
-			return fmt.Errorf("failed to delete cache key %s: %v", iter.Val(), err)
+		keys = append(keys, iter.Val())
+		if len(keys) >= 100 {
+			if err := cache.Del(ctx, keys...).Err(); err != nil {
+				return fmt.Errorf("failed to clear user cache: %v", err)
+			}
+			keys = keys[:0]
 		}
 	}
+
+	if len(keys) > 0 {
+		if err := cache.Del(ctx, keys...).Err(); err != nil {
+			return fmt.Errorf("failed to clear user cache: %v", err)
+		}
+	}
+
 	return iter.Err()
 }
 
