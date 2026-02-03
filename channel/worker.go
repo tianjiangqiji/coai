@@ -7,6 +7,7 @@ import (
 	"chat/utils"
 	"fmt"
 	"github.com/go-redis/redis/v8"
+	"strconv"
 	"time"
 )
 
@@ -37,12 +38,25 @@ func NewChatRequest(group string, props *adaptercommon.ChatProps, hook globals.H
 	return err
 }
 
+func getHashIndex(hash string, size int64) int64 {
+	if size <= 0 {
+		return 0
+	}
+
+	val, err := strconv.ParseUint(utils.GetSegmentString(hash, 8), 16, 64)
+	if err != nil {
+		return 0
+	}
+
+	return int64(val % uint64(size))
+}
+
 func PreflightCache(cache *redis.Client, model string, hash string, buffer *utils.Buffer, hook globals.Hook) (int64, bool, error) {
 	if !utils.Contains(model, globals.CacheAcceptedModels) {
 		return 0, false, nil
 	}
 
-	idx := utils.Intn64(globals.CacheAcceptedSize)
+	idx := getHashIndex(hash, globals.CacheAcceptedSize)
 	key := fmt.Sprintf("chat-cache:%d:%s", idx, hash)
 
 	raw, err := cache.Get(cache.Context(), key).Result()
