@@ -140,11 +140,12 @@ func (c *ChatInstance) CreateChatRequest(props *adaptercommon.ChatProps) (string
 	return data.Choices[0].Message.Content, nil
 }
 
+var requestIdRegex = regexp.MustCompile(`\(request id: [a-zA-Z0-9]+\)`)
+
 func hideRequestId(message string) string {
 	// xxx (request id: 2024020311120561344953f0xfh0TX)
 
-	exp := regexp.MustCompile(`\(request id: [a-zA-Z0-9]+\)`)
-	return exp.ReplaceAllString(message, "")
+	return requestIdRegex.ReplaceAllString(message, "")
 }
 
 // CreateStreamChatRequest is the stream response body for openai
