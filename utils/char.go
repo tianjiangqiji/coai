@@ -10,6 +10,18 @@ import (
 	"github.com/goccy/go-json"
 )
 
+var (
+	logImageRegex        = regexp.MustCompile(`(data:image/\w+;base64,)([\w+/=]{21,})`)
+	urlRegex             = regexp.MustCompile(`(https?://\S+)`)
+	markdownImageRegex   = regexp.MustCompile(`!\[.*?\]\((https?://\S+)\)`)
+	markdownBase64Regex  = regexp.MustCompile(`!\[.*?\]\((data:image/\w+;base64,[\w+/=]+)\)`)
+	base64Regex          = regexp.MustCompile(`(data:image/\w+;base64,[\w+/=]+)`)
+	fileBlockRegexp      = regexp.MustCompile("(?s)```file\\n\\[\\[.*?]]\\n.*?\\n```\\n*")
+	externalImageRegex   = regexp.MustCompile(`(https?://\S+\.(?:png|jpg|jpeg|gif|webp|heif|heic|bmp|svg|ico)(?:\?\S+)?)`)
+	unicodeRegex         = regexp.MustCompile(`\\u([0-9a-fA-F]{4})`)
+	escapeCharRegex      = regexp.MustCompile(`\\([nrtvfb])`)
+)
+
 func GetRandomInt(min int, max int) int {
 	return Intn(max-min) + min
 }
@@ -72,9 +84,8 @@ func Marshal[T interface{}](data T) string {
 func MarshalLog[T interface{}](data T) string {
 	raw := Marshal(data)
 	// Truncate base64 image data in logs to prevent large binary output
-	re := regexp.MustCompile(`(data:image/\w+;base64,)([\w+/=]{21,})`)
-	return re.ReplaceAllStringFunc(raw, func(s string) string {
-		matches := re.FindStringSubmatch(s)
+	return logImageRegex.ReplaceAllStringFunc(raw, func(s string) string {
+		matches := logImageRegex.FindStringSubmatch(s)
 		if len(matches) > 2 {
 			return matches[1] + matches[2][:20] + "..."
 		}
@@ -245,8 +256,7 @@ func TruncateLog(data string) string {
 }
 
 func ExtractUrls(data string) []string {
-	re := regexp.MustCompile(`(https?://\S+)`)
-	return re.FindAllString(data, -1)
+	return urlRegex.FindAllString(data, -1)
 }
 
 func ExtractFiles(data string) (content string, files []string) {
@@ -274,8 +284,7 @@ func ExtractImages(data string, includeBase64 bool) (content string, images []st
 
 func ExtractImagesFromMarkdown(data string) (images []string) {
 	// extract images like `![image](https://xxx.com/xxx?xxx=xxx&xxx=xxx)` and return urls
-	re := regexp.MustCompile(`!\[.*\]\((https?://\S+)\)`)
-	matches := re.FindAllStringSubmatch(data, -1)
+	matches := markdownImageRegex.FindAllStringSubmatch(data, -1)
 
 	for _, match := range matches {
 		images = append(images, match[1])
@@ -286,8 +295,7 @@ func ExtractImagesFromMarkdown(data string) (images []string) {
 
 func ExtractBase64FromMarkdown(data string) (images []string) {
 	// extract base64 images like `![image](data:image/png;base64,xxxxxx)`
-	re := regexp.MustCompile(`!\[.*?\]\((data:image/\w+;base64,[\w+/=]+)\)`)
-	matches := re.FindAllStringSubmatch(data, -1)
+	matches := markdownBase64Regex.FindAllStringSubmatch(data, -1)
 
 	for _, match := range matches {
 		// We only need the base64 data part
@@ -301,11 +309,8 @@ func ExtractBase64FromMarkdown(data string) (images []string) {
 
 func ExtractBase64Images(data string) []string {
 	// get base64 images from data (data:image/png;base64,xxxxxx) (\n \\n [space] \\t \\r \\v \\f break the base64 string)
-	re := regexp.MustCompile(`(data:image/\w+;base64,[\w+/=]+)`)
-	return re.FindAllString(data, -1)
+	return base64Regex.FindAllString(data, -1)
 }
-
-var fileBlockRegexp = regexp.MustCompile("(?s)```file\\n\\[\\[.*?]]\\n.*?\\n```\\n*")
 
 func RemoveFileMarkup(data string) string {
 	if len(data) == 0 {
@@ -317,20 +322,17 @@ func RemoveFileMarkup(data string) string {
 func ExtractExternalImages(data string) []string {
 	// https://platform.openai.com/docs/guides/vision/what-type-of-files-can-i-upload
 
-	re := regexp.MustCompile(`(https?://\S+\.(?:png|jpg|jpeg|gif|webp|heif|heic|bmp|svg|ico)(?:\?\S+)?)`)
-	return re.FindAllString(data, -1)
+	return externalImageRegex.FindAllString(data, -1)
 }
 
 func ContainUnicode(data string) bool {
 	// like `hi\\u2019s` => true
-	re := regexp.MustCompile(`\\u([0-9a-fA-F]{4})`)
-	return re.MatchString(data)
+	return unicodeRegex.MatchString(data)
 }
 
 func DecodeUnicode(data string) string {
 	// like `hi\\u2019s` => `hi's`
-	re := regexp.MustCompile(`\\u([0-9a-fA-F]{4})`)
-	return re.ReplaceAllStringFunc(data, func(s string) string {
+	return unicodeRegex.ReplaceAllStringFunc(data, func(s string) string {
 		unicode, err := strconv.ParseInt(s[2:], 16, 32)
 		if err != nil {
 			return s
@@ -342,7 +344,6 @@ func DecodeUnicode(data string) string {
 
 func EscapeChar(data string) string {
 	// like `\\n` => `\n`, `\\t` => `\t` and so on
-	re := regexp.MustCompile(`\\([nrtvfb])`)
 
 	mapper := map[string]string{
 		"n": "\n",
@@ -353,7 +354,7 @@ func EscapeChar(data string) string {
 		"b": "\b",
 	}
 
-	return re.ReplaceAllStringFunc(data, func(s string) string {
+	return escapeCharRegex.ReplaceAllStringFunc(data, func(s string) string {
 		return mapper[s[1:]]
 	})
 }
