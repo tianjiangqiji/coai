@@ -20,10 +20,12 @@ const SessionRecovery: React.FC<SessionRecoveryProps> = ({
   onRecoveryComplete,
   onRecoveryFailed,
 }) => {
-  const [recoveryStatus, setRecoveryStatus] = useState<'checking' | 'recovering' | 'success' | 'failed' | 'none'>('none');
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [recoveryStatus, setRecoveryStatus] = useState<
+    "checking" | "recovering" | "success" | "failed" | "none"
+  >("none");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [showRecoveryUI, setShowRecoveryUI] = useState(false);
-  
+
   const dispatch = useDispatch();
   const sessionActions = useSessionActions();
   const { toggle } = useConversationActions();
@@ -36,26 +38,34 @@ const SessionRecovery: React.FC<SessionRecoveryProps> = ({
   }, []);
 
   const checkAndRecoverSession = async () => {
-    setRecoveryStatus('checking');
+    setRecoveryStatus("checking");
     setShowRecoveryUI(true);
 
     try {
       // 检查localStorage中是否有未完成的会话
       const storedSessionId = getMemory("current_session_id");
-      const storedConversationId = getNumberMemory("current_session_conversation", -1);
-      
+      const storedConversationId = getNumberMemory(
+        "current_session_conversation",
+        -1,
+      );
+
       if (!storedSessionId) {
-        setRecoveryStatus('none');
+        setRecoveryStatus("none");
         setShowRecoveryUI(false);
         onRecoveryComplete?.();
         return;
       }
 
       // 检查存储的会话是否与当前对话匹配
-      if (storedConversationId !== currentConversationId && currentConversationId !== -1) {
-        console.log('Stored session does not match current conversation, skipping recovery');
+      if (
+        storedConversationId !== currentConversationId &&
+        currentConversationId !== -1
+      ) {
+        console.log(
+          "Stored session does not match current conversation, skipping recovery",
+        );
         sessionActions.clearAll();
-        setRecoveryStatus('none');
+        setRecoveryStatus("none");
         setShowRecoveryUI(false);
         onRecoveryComplete?.();
         return;
@@ -72,7 +82,8 @@ const SessionRecovery: React.FC<SessionRecoveryProps> = ({
         // 确保有一个 assistant 占位消息承接流式输出
         const conv = conversations[storedConversationId];
         const last = conv?.messages?.[conv.messages.length - 1];
-        const needPlaceholder = !last || last.role !== AssistantRole || last.end === true;
+        const needPlaceholder =
+          !last || last.role !== AssistantRole || last.end === true;
         if (needPlaceholder) {
           dispatch(
             createMessage({
@@ -86,51 +97,56 @@ const SessionRecovery: React.FC<SessionRecoveryProps> = ({
 
       // 如果当前对话有活跃会话，检查是否需要恢复
       if (currentConversationId !== -1) {
-        const activeSessionId = await sessionActions.checkConversationSession(currentConversationId);
-        
+        const activeSessionId = await sessionActions.checkConversationSession(
+          currentConversationId,
+        );
+
         if (activeSessionId && activeSessionId !== storedSessionId) {
           // 发现不同的活跃会话，使用服务器上的会话
-          console.log('Found different active session on server, recovering from server');
-          setRecoveryStatus('recovering');
-          
-          const success = await sessionActions.reconnectToExistingSession(activeSessionId);
+          console.log(
+            "Found different active session on server, recovering from server",
+          );
+          setRecoveryStatus("recovering");
+
+          const success =
+            await sessionActions.reconnectToExistingSession(activeSessionId);
           if (success) {
-            setRecoveryStatus('success');
+            setRecoveryStatus("success");
             setTimeout(() => {
               setShowRecoveryUI(false);
               onRecoveryComplete?.();
             }, 2000);
           } else {
-            throw new Error('无法重连到服务器会话');
+            throw new Error("无法重连到服务器会话");
           }
           return;
         }
       }
 
       // 尝试恢复存储的会话
-      setRecoveryStatus('recovering');
-      const success = await sessionActions.reconnectToExistingSession(storedSessionId);
-      
+      setRecoveryStatus("recovering");
+      const success =
+        await sessionActions.reconnectToExistingSession(storedSessionId);
+
       if (success) {
-        setRecoveryStatus('success');
+        setRecoveryStatus("success");
         setTimeout(() => {
           setShowRecoveryUI(false);
           onRecoveryComplete?.();
         }, 2000);
       } else {
-        throw new Error('无法恢复会话，可能会话已过期或服务器重启');
+        throw new Error("无法恢复会话，可能会话已过期或服务器重启");
       }
-      
     } catch (error) {
-      console.error('Session recovery failed:', error);
-      const errorMsg = error instanceof Error ? error.message : '未知错误';
+      console.error("Session recovery failed:", error);
+      const errorMsg = error instanceof Error ? error.message : "未知错误";
       setErrorMessage(errorMsg);
-      setRecoveryStatus('failed');
+      setRecoveryStatus("failed");
       onRecoveryFailed?.(errorMsg);
-      
+
       // 清理无效的会话数据
       sessionActions.clearAll();
-      
+
       setTimeout(() => {
         setShowRecoveryUI(false);
       }, 5000);
@@ -155,7 +171,7 @@ const SessionRecovery: React.FC<SessionRecoveryProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
         <div className="flex flex-col items-center text-center">
-          {recoveryStatus === 'checking' && (
+          {recoveryStatus === "checking" && (
             <>
               <Loader2 className="w-8 h-8 animate-spin text-blue-500 mb-4" />
               <h3 className="text-lg font-semibold mb-2">检查会话状态</h3>
@@ -165,7 +181,7 @@ const SessionRecovery: React.FC<SessionRecoveryProps> = ({
             </>
           )}
 
-          {recoveryStatus === 'recovering' && (
+          {recoveryStatus === "recovering" && (
             <>
               <Loader2 className="w-8 h-8 animate-spin text-green-500 mb-4" />
               <h3 className="text-lg font-semibold mb-2">恢复会话中</h3>
@@ -180,7 +196,7 @@ const SessionRecovery: React.FC<SessionRecoveryProps> = ({
             </>
           )}
 
-          {recoveryStatus === 'success' && (
+          {recoveryStatus === "success" && (
             <>
               <CheckCircle className="w-8 h-8 text-green-500 mb-4" />
               <h3 className="text-lg font-semibold mb-2 text-green-700 dark:text-green-400">
@@ -192,14 +208,14 @@ const SessionRecovery: React.FC<SessionRecoveryProps> = ({
             </>
           )}
 
-          {recoveryStatus === 'failed' && (
+          {recoveryStatus === "failed" && (
             <>
               <AlertCircle className="w-8 h-8 text-red-500 mb-4" />
               <h3 className="text-lg font-semibold mb-2 text-red-700 dark:text-red-400">
                 会话恢复失败
               </h3>
               <p className="text-gray-600 dark:text-gray-300 mb-4">
-                {errorMessage || '无法恢复之前的对话会话'}
+                {errorMessage || "无法恢复之前的对话会话"}
               </p>
               <div className="flex gap-3">
                 <button

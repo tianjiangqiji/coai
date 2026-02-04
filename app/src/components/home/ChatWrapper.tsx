@@ -4,7 +4,7 @@ import FileAction from "@/components/FileProvider.tsx";
 import { useSelector } from "react-redux";
 import { selectAuthenticated, selectInit } from "@/store/auth.ts";
 import {
-  listenMessageEvent,
+  useMessageEvent,
   selectCurrent,
   selectModel,
   selectSupportModels,
@@ -17,7 +17,12 @@ import {
 import { formatMessage } from "@/utils/processor.ts";
 import ChatInterface from "@/components/home/ChatInterface.tsx";
 import { clearHistoryState, getQueryParam } from "@/utils/path.ts";
-import { forgetMemory, getMemory, getNumberMemory, popMemory } from "@/utils/memory.ts";
+import {
+  forgetMemory,
+  getMemory,
+  getNumberMemory,
+  popMemory,
+} from "@/utils/memory.ts";
 import { alignSelector } from "@/store/settings.ts";
 import { FileArray } from "@/api/file.ts";
 import {
@@ -66,7 +71,7 @@ function ChatWrapper() {
   const { t } = useTranslation();
   const { send: sendAction } = useMessageActions();
   const { refresh, toggle } = useConversationActions();
-  const process = listenMessageEvent();
+  const process = useMessageEvent();
   const [files, fileDispatch] = useReducer(fileReducer, []);
   const [input, setInput] = useState("");
   const [visible, setVisibility] = useState(false);

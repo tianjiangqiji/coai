@@ -4,7 +4,6 @@ import { getMemory, setMemory } from "@/utils/memory.ts";
 import cn from "@/resources/i18n/cn.json";
 import en from "@/resources/i18n/en.json";
 
-
 // the translations
 // (tip move them in a JSON file and import them,
 // or even better, manage them separated from your code: https://react.i18next.com/guides/multiple-translation-files)

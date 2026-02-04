@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import path from "path"
-import { createHtmlPlugin } from 'vite-plugin-html' //@ts-ignore
+import { createHtmlPlugin } from 'vite-plugin-html' //@ts-expect-error: vite-plugin-html does not have types
 import { createTranslationPlugin } from "./src/translator"
 
 // https://vitejs.dev/config/

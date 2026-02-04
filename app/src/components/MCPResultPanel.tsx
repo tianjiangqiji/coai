@@ -1,12 +1,12 @@
-import { 
-  CheckCircle, 
-  XCircle, 
+import {
+  CheckCircle,
+  XCircle,
   Loader2,
   Copy,
   Bug,
   BugOff,
   Edit,
-  Check
+  Check,
 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -19,21 +19,22 @@ interface ToolArgumentEditorProps {
   onValueChange: (key: string, value: unknown) => void;
 }
 
-function ToolArgumentEditor({ 
-  paramKey, 
-  paramValue, 
-  onValueChange 
+function ToolArgumentEditor({
+  paramKey,
+  paramValue,
+  onValueChange,
 }: ToolArgumentEditorProps): JSX.Element {
   const { t } = useTranslation();
   const copy = useClipboard();
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(String(paramValue || ''));
+  const [editValue, setEditValue] = useState(String(paramValue || ""));
 
   const handleSave = () => {
     try {
-      const parsedValue = editValue.startsWith('{') || editValue.startsWith('[') 
-        ? JSON.parse(editValue) 
-        : editValue;
+      const parsedValue =
+        editValue.startsWith("{") || editValue.startsWith("[")
+          ? JSON.parse(editValue)
+          : editValue;
       onValueChange(paramKey, parsedValue);
     } catch {
       onValueChange(paramKey, editValue);
@@ -45,23 +46,26 @@ function ToolArgumentEditor({
     await copy(String(paramValue));
   };
 
-  const displayValue = typeof paramValue === 'object' 
-    ? JSON.stringify(paramValue, null, 2) 
-    : String(paramValue);
+  const displayValue =
+    typeof paramValue === "object"
+      ? JSON.stringify(paramValue, null, 2)
+      : String(paramValue);
 
   return (
     <div className="tool-param-item flex items-center gap-3 py-1.5 px-2 rounded hover:bg-muted/20 transition-colors">
       <div className="flex items-center gap-2 min-w-0 flex-1">
-        <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">{paramKey}:</span>
+        <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+          {paramKey}:
+        </span>
         {isEditing ? (
           <textarea
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
             className="flex-1 text-xs bg-background border rounded px-2 py-1 min-h-[24px] font-mono resize-none"
             onKeyDown={(e) => {
-              if (e.key === 'Escape') {
+              if (e.key === "Escape") {
                 setIsEditing(false);
-              } else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+              } else if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
                 handleSave();
               }
             }}
@@ -94,7 +98,11 @@ function ToolArgumentEditor({
           className="p-0.5 text-muted-foreground hover:text-foreground transition-colors"
           title={isEditing ? t("plugin.mcp.save") : t("plugin.mcp.edit")}
         >
-          {isEditing ? <Check className="h-3 w-3" /> : <Edit className="h-3 w-3" />}
+          {isEditing ? (
+            <Check className="h-3 w-3" />
+          ) : (
+            <Edit className="h-3 w-3" />
+          )}
         </button>
       </div>
     </div>
@@ -117,13 +125,13 @@ interface SingleToolCallPanelProps {
   pluginName?: string;
 }
 
-export function SingleToolCallPanel({ 
-  toolCall, 
-  pluginName = "MCP" 
+export function SingleToolCallPanel({
+  toolCall,
+  pluginName = "MCP",
 }: SingleToolCallPanelProps): JSX.Element {
   const { t } = useTranslation();
   const [showDebug, setShowDebug] = useState(false);
-  
+
   const getStatusIcon = () => {
     switch (toolCall.status) {
       case "start":
@@ -166,26 +174,36 @@ export function SingleToolCallPanel({
       <div className="flex items-center justify-between gap-2 px-3 py-2 border-b">
         <div className="flex items-center gap-2">
           <div className="flex flex-col items-start">
-            <span className="text-sm font-medium">{pluginName} / {toolCall.function.name}</span>
+            <span className="text-sm font-medium">
+              {pluginName} / {toolCall.function.name}
+            </span>
             <span className="text-xs text-muted-foreground flex items-center gap-1">
               {getStatusIcon()}
               {getStatusDescription()}
             </span>
           </div>
         </div>
-        
+
         <button
           onClick={() => setShowDebug(!showDebug)}
           className="px-2 py-1 text-xs bg-muted hover:bg-muted/80 border rounded transition-colors flex items-center gap-1"
-          title={showDebug ? t("plugin.mcp.hide-debug") : t("plugin.mcp.show-debug")}
+          title={
+            showDebug ? t("plugin.mcp.hide-debug") : t("plugin.mcp.show-debug")
+          }
         >
-          {showDebug ? <BugOff className="h-3 w-3" /> : <Bug className="h-3 w-3" />}
+          {showDebug ? (
+            <BugOff className="h-3 w-3" />
+          ) : (
+            <Bug className="h-3 w-3" />
+          )}
           DEBUG
         </button>
       </div>
 
       <div className="px-3 py-3">
-        <div className="text-sm font-medium text-muted-foreground mb-2">{t("plugin.mcp.tool-arguments")}</div>
+        <div className="text-sm font-medium text-muted-foreground mb-2">
+          {t("plugin.mcp.tool-arguments")}
+        </div>
         {Object.keys(argumentsObj).length > 0 ? (
           <div className="border rounded-md bg-muted/30 divide-y divide-border/50">
             {Object.entries(argumentsObj).map(([key, value]) => (
@@ -204,9 +222,7 @@ export function SingleToolCallPanel({
         )}
       </div>
 
-      {showDebug && (
-        <MCPResultDebug toolCall={toolCall} />
-      )}
+      {showDebug && <MCPResultDebug toolCall={toolCall} />}
     </div>
   );
 }

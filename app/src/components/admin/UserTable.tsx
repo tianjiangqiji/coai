@@ -209,7 +209,10 @@ function OperationMenu({ user, onRefresh }: OperationMenuProps) {
         description={t("admin.subscription-action-desc", {
           username: user.username,
         })}
-        defaultValue={user.expired_at || new Date().toISOString().slice(0, 19).replace('T', ' ')}
+        defaultValue={
+          user.expired_at ||
+          new Date().toISOString().slice(0, 19).replace("T", " ")
+        }
         open={subscriptionOpen}
         setOpen={setSubscriptionOpen}
         onSubmit={async (value) => {

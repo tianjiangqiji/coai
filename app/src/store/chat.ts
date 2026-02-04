@@ -195,7 +195,8 @@ const chatSlice = createSlice({
       if (!conversation || conversation.messages.length === 0) return;
 
       // 删除最后一条 assistant 消息（如果存在）
-      const lastMessage = conversation.messages[conversation.messages.length - 1];
+      const lastMessage =
+        conversation.messages[conversation.messages.length - 1];
       if (lastMessage.role === AssistantRole) {
         conversation.messages.pop();
       }
@@ -375,7 +376,6 @@ const chatSlice = createSlice({
 
       setOfflineModels(models);
     },
-
   },
 });
 
@@ -505,9 +505,10 @@ export function useConversationActions() {
           session.session_id
         ) {
           const latestConversation = conversations[id] ?? loaded;
-          const latestMessage = latestConversation?.messages?.[
-            (latestConversation?.messages?.length ?? 0) - 1
-          ];
+          const latestMessage =
+            latestConversation?.messages?.[
+              (latestConversation?.messages?.length ?? 0) - 1
+            ];
 
           const needPlaceholder =
             !latestMessage ||
@@ -722,13 +723,15 @@ export function useMessageActions() {
 
       // 处理会话ID，如果消息包含session_id，则创建或更新会话
       if (message.session_id && message.conversation) {
-        dispatch(startSession(message.session_id, message.conversation, model) as any);
+        dispatch(
+          startSession(message.session_id, message.conversation, model) as any,
+        );
       }
     },
   };
 }
 
-export function listenMessageEvent() {
+export function useMessageEvent() {
   const actions = useMessageActions();
 
   return (e: ConnectionEvent) => {

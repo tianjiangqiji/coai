@@ -17,13 +17,7 @@ import {
 import { Button } from "@/components/ui/button.tsx";
 import router from "@/router.tsx";
 import React from "react";
-import {
-  LibraryBig,
-  MessageCircle,
-  Shield,
-  User,
-  Wallet,
-} from "lucide-react";
+import { LibraryBig, MessageCircle, Shield, User, Wallet } from "lucide-react";
 import Icon from "@/components/utils/Icon.tsx";
 
 type MenuBarProps = {

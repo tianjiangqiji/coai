@@ -45,7 +45,7 @@ export function handleLine(
   const segment = data.split("\n");
   const line = segment.length;
   if (line > max_line) {
-    return end ?? true
+    return (end ?? true)
       ? segment.slice(line - max_line).join("\n")
       : segment.slice(0, max_line).join("\n");
   } else {

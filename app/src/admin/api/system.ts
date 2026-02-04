@@ -65,7 +65,7 @@ export type SecurityState = {
 
   custom_endpoint: string;
   custom_audit_token: string;
-  
+
   blacklist_ips: string[];
   whitelist_ips: string[];
 };
@@ -306,8 +306,7 @@ export async function getConfig(): Promise<SystemResponse> {
       data.data.site.currency = data.data.site.currency || "cny";
 
       if (data.data.payment?.epay) {
-        data.data.payment.epay.methods =
-          data.data.payment.epay.methods || [];
+        data.data.payment.epay.methods = data.data.payment.epay.methods || [];
         data.data.payment.epay.minamount =
           data.data.payment.epay.minamount &&
           data.data.payment.epay.minamount > 0
@@ -355,11 +354,18 @@ export async function getConfig(): Promise<SystemResponse> {
         };
       }
 
-      const rt = (data.data.general.realtime = data.data.general.realtime || {});
+      const rt = (data.data.general.realtime =
+        data.data.general.realtime || {});
       const ws = (rt.ws = rt.ws || {});
-      ws.buffer_size = typeof ws.buffer_size === "number" && ws.buffer_size > 0 ? ws.buffer_size : 1;
+      ws.buffer_size =
+        typeof ws.buffer_size === "number" && ws.buffer_size > 0
+          ? ws.buffer_size
+          : 1;
       ws.aggregate = typeof ws.aggregate === "boolean" ? ws.aggregate : true;
-      ws.aggregate_window_ms = typeof ws.aggregate_window_ms === "number" && ws.aggregate_window_ms > 0 ? ws.aggregate_window_ms : 20;
+      ws.aggregate_window_ms =
+        typeof ws.aggregate_window_ms === "number" && ws.aggregate_window_ms > 0
+          ? ws.aggregate_window_ms
+          : 20;
 
       const at = (data.data.auto_title = data.data.auto_title || {
         enabled: false,
@@ -371,8 +377,10 @@ export async function getConfig(): Promise<SystemResponse> {
       });
       at.enabled = !!at.enabled;
       at.model = at.model || "";
-      at.max_len = typeof at.max_len === "number" && at.max_len > 0 ? at.max_len : 50;
-      at.min_msgs = typeof at.min_msgs === "number" && at.min_msgs > 0 ? at.min_msgs : 6;
+      at.max_len =
+        typeof at.max_len === "number" && at.max_len > 0 ? at.max_len : 50;
+      at.min_msgs =
+        typeof at.min_msgs === "number" && at.min_msgs > 0 ? at.min_msgs : 6;
       at.overwrite = !!at.overwrite;
       at.prompt = at.prompt || "";
     }

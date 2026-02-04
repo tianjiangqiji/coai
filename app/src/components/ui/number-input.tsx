@@ -47,7 +47,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       v = v.replace(exp, "");
 
       const raw = getNumber(v, props.acceptNegative);
-      let val = parseFloat(raw);
+      const val = parseFloat(raw);
       if (isNaN(val) && !props.acceptNaN) return (props.min ?? 0).toString();
       if (props.max !== undefined && val > props.max)
         return props.max.toString();

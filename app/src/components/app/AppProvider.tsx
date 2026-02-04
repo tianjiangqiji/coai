@@ -50,7 +50,10 @@ function AppProvider({ children }: { children?: React.ReactNode }) {
               action: {
                 label: t("drawing.viewTask"),
                 onClick: () => {
-                  localStorage.setItem("drawing_results", JSON.stringify(res.data));
+                  localStorage.setItem(
+                    "drawing_results",
+                    JSON.stringify(res.data),
+                  );
                   router.navigate("/drawing");
                 },
               },

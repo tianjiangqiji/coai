@@ -1,4 +1,3 @@
-
 const DB_NAME = "coai_drawing_db";
 const STORE_NAME = "drawing_history";
 const DB_VERSION = 1;
@@ -53,7 +52,10 @@ export class DrawingDB {
     });
   }
 
-  async saveAll(items: DrawingHistoryItem[], maxCount: number = 100): Promise<void> {
+  async saveAll(
+    items: DrawingHistoryItem[],
+    maxCount: number = 100,
+  ): Promise<void> {
     const db = await this.open();
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(STORE_NAME, "readwrite");
@@ -69,7 +71,7 @@ export class DrawingDB {
           return;
         }
 
-        limitedItems.forEach(item => {
+        limitedItems.forEach((item) => {
           const addRequest = store.add(item);
           addRequest.onsuccess = () => {
             completed++;

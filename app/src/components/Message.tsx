@@ -15,11 +15,7 @@ import {
   Trash,
 } from "lucide-react";
 import { filterMessage } from "@/utils/processor.ts";
-import {
-  copyClipboard,
-  isContainDom,
-  saveAsFile,
-} from "@/utils/dom.ts";
+import { copyClipboard, isContainDom, saveAsFile } from "@/utils/dom.ts";
 import { useTranslation } from "react-i18next";
 import React, { Ref, useRef, useState } from "react";
 import {
@@ -31,9 +27,7 @@ import {
 import { cn } from "@/components/ui/lib/utils.ts";
 import EditorProvider from "@/components/EditorProvider.tsx";
 import Avatar from "@/components/Avatar.tsx";
-import ModelAvatar, {
-  hasModelAvatar,
-} from "@/components/ModelAvatar.tsx";
+import ModelAvatar, { hasModelAvatar } from "@/components/ModelAvatar.tsx";
 import { useSelector } from "react-redux";
 import { selectUsername } from "@/store/auth.ts";
 import {
@@ -279,7 +273,9 @@ function MessageContent({
       avatar: "",
     };
   }, [activeModel, activeModelId]);
-  const showModelAvatar = modelForAvatar ? hasModelAvatar(modelForAvatar) : false;
+  const showModelAvatar = modelForAvatar
+    ? hasModelAvatar(modelForAvatar)
+    : false;
 
   const [open, setOpen] = useState(false);
   const [editedMessage, setEditedMessage] = useState<string | undefined>("");
@@ -288,12 +284,12 @@ function MessageContent({
   const parseThinkContent = (content: string) => {
     // 检查是否以 <think> 开头（思考内容必须在消息开头）
     const trimmedContent = content.trimStart();
-    if (!trimmedContent.startsWith('<think>')) {
+    if (!trimmedContent.startsWith("<think>")) {
       return null;
     }
 
-    const startIndex = content.indexOf('<think>');
-    const endIndex = content.indexOf('</think>');
+    const startIndex = content.indexOf("<think>");
+    const endIndex = content.indexOf("</think>");
     const hasEndTag = endIndex !== -1;
 
     if (hasEndTag) {
@@ -303,20 +299,22 @@ function MessageContent({
       return {
         thinkContent,
         restContent,
-        isComplete: true
+        isComplete: true,
       };
     } else {
       // 没有结束标签（流式传输中）：所有内容都是思考内容
       const thinkContent = content.substring(startIndex + 7).trim();
       return {
         thinkContent,
-        restContent: '',
-        isComplete: false
+        restContent: "",
+        isComplete: false,
       };
     }
   };
 
-  const parsedContent = message.content.length ? parseThinkContent(message.content) : null;
+  const parsedContent = message.content.length
+    ? parseThinkContent(message.content)
+    : null;
 
   return (
     <div className={"content-wrapper"}>
@@ -335,20 +333,18 @@ function MessageContent({
               className={`message-avatar animate-fade-in`}
               username={username ?? user}
             />
+          ) : showModelAvatar && modelForAvatar ? (
+            <ModelAvatar
+              model={modelForAvatar}
+              className={`message-avatar animate-fade-in`}
+              size={36}
+            />
           ) : (
-            showModelAvatar && modelForAvatar ? (
-              <ModelAvatar
-                model={modelForAvatar}
-                className={`message-avatar animate-fade-in`}
-                size={36}
-              />
-            ) : (
-              <img
-                src={appLogo}
-                alt={``}
-                className={`message-avatar animate-fade-in`}
-              />
-            )
+            <img
+              src={appLogo}
+              alt={``}
+              className={`message-avatar animate-fade-in`}
+            />
           )
         ) : (
           <MessageMenu

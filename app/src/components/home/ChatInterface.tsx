@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Message } from "@/api/types.tsx";
 import { useSelector } from "react-redux";
 import {
-  listenMessageEvent,
+  useMessageEvent,
   selectCurrent,
   useMessages,
 } from "@/store/chat.ts";
@@ -23,14 +23,14 @@ const shouldRenderMessage = (message: Message): boolean => {
   if (message.role && message.role.startsWith("virtualRole::")) {
     return false;
   }
-  
+
   return true;
 };
 
 function ChatInterface({ scrollable, setTarget }: ChatInterfaceProps) {
   const ref = React.useRef<HTMLDivElement>(null);
   const messages: Message[] = useMessages();
-  const process = listenMessageEvent();
+  const process = useMessageEvent();
   const current: number = useSelector(selectCurrent);
   const [selected, setSelected] = React.useState(-1);
 
@@ -53,8 +53,8 @@ function ChatInterface({ scrollable, setTarget }: ChatInterfaceProps) {
       <AnimatePresence>
         <motion.div className="chat-messages-wrapper">
           {renderableMessages.map((message) => {
-            const originalIndex = messages.findIndex(m => m === message);
-            
+            const originalIndex = messages.findIndex((m) => m === message);
+
             return (
               <motion.div
                 key={`message-${originalIndex}`}
@@ -75,8 +75,17 @@ function ChatInterface({ scrollable, setTarget }: ChatInterfaceProps) {
                 <MessageSegment
                   message={message}
                   end={originalIndex === messages.length - 1}
-                  onEvent={(event: string, index?: number, message?: string) => {
-                    process({ id: current, event, index: index ?? originalIndex, message });
+                  onEvent={(
+                    event: string,
+                    index?: number,
+                    message?: string,
+                  ) => {
+                    process({
+                      id: current,
+                      event,
+                      index: index ?? originalIndex,
+                      message,
+                    });
                   }}
                   index={originalIndex}
                   selected={selected === originalIndex}

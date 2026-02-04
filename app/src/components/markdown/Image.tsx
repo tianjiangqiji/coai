@@ -1,7 +1,18 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getFilenameFromURL } from "@/utils/base.ts";
-import { AlertCircle, Copy, Eye, Link, Loader2, ChevronDown, ChevronUp, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
+import {
+  AlertCircle,
+  Copy,
+  Eye,
+  Link,
+  Loader2,
+  ChevronDown,
+  ChevronUp,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { cn } from "@/components/ui/lib/utils.ts";
 import {
@@ -65,7 +76,10 @@ export default function Image({
     if (e.touches.length === 1) {
       setIsDragging(true);
       const touch = e.touches[0];
-      setDragStart({ x: touch.clientX - position.x, y: touch.clientY - position.y });
+      setDragStart({
+        x: touch.clientX - position.x,
+        y: touch.clientY - position.y,
+      });
     }
   };
 
@@ -155,7 +169,10 @@ export default function Image({
           </span>
         </div>
       </DialogTrigger>
-      <DialogContent className={`flex-dialog max-w-[90vw] max-h-[90vh]`} couldFullScreen>
+      <DialogContent
+        className={`flex-dialog max-w-[90vw] max-h-[90vh]`}
+        couldFullScreen
+      >
         <DialogHeader>
           <DialogTitle className={`flex flex-row items-center`}>
             <Eye className={`h-4 w-4 mr-1.5 translate-y-[1px]`} />
@@ -163,18 +180,40 @@ export default function Image({
           </DialogTitle>
         </DialogHeader>
         <div className={`flex flex-row mb-2 items-center gap-2`}>
-          <div className={`flex items-center border rounded-md px-1 bg-background/50`}>
-            <Button size={`icon`} variant={`ghost`} className={`h-8 w-8`} onClick={handleZoomOut} title={t("zoom-out")}>
+          <div
+            className={`flex items-center border rounded-md px-1 bg-background/50`}
+          >
+            <Button
+              size={`icon`}
+              variant={`ghost`}
+              className={`h-8 w-8`}
+              onClick={handleZoomOut}
+              title={t("zoom-out")}
+            >
               <ZoomOut className={`h-4 w-4`} />
             </Button>
-            <div className={`text-xs px-2 min-w-[3rem] text-center select-none`}>
+            <div
+              className={`text-xs px-2 min-w-[3rem] text-center select-none`}
+            >
               {Math.round(scale * 100)}%
             </div>
-            <Button size={`icon`} variant={`ghost`} className={`h-8 w-8`} onClick={handleZoomIn} title={t("zoom-in")}>
+            <Button
+              size={`icon`}
+              variant={`ghost`}
+              className={`h-8 w-8`}
+              onClick={handleZoomIn}
+              title={t("zoom-in")}
+            >
               <ZoomIn className={`h-4 w-4`} />
             </Button>
             <div className={`w-px h-4 bg-border mx-1`} />
-            <Button size={`icon`} variant={`ghost`} className={`h-8 w-8`} onClick={handleReset} title={t("reset")}>
+            <Button
+              size={`icon`}
+              variant={`ghost`}
+              className={`h-8 w-8`}
+              onClick={handleReset}
+              title={t("reset")}
+            >
               <RotateCcw className={`h-4 w-4`} />
             </Button>
           </div>
@@ -195,12 +234,15 @@ export default function Image({
             <Link className={`h-4 w-4`} />
           </Button>
         </div>
-        <div className={`flex flex-col items-center overflow-hidden relative grow`}>
+        <div
+          className={`flex flex-col items-center overflow-hidden relative grow`}
+        >
           <div
             ref={containerRef}
             className={cn(
               "relative flex items-center justify-center w-full h-full min-h-[400px] overflow-hidden bg-secondary/10 rounded-md",
-              (scale > 1 || position.x !== 0 || position.y !== 0) && "cursor-move"
+              (scale > 1 || position.x !== 0 || position.y !== 0) &&
+                "cursor-move",
             )}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
@@ -210,7 +252,9 @@ export default function Image({
             onWheel={handleWheel}
           >
             <img
-              className={cn("max-w-full max-h-full transition-transform duration-75 ease-out select-none pointer-events-none")}
+              className={cn(
+                "max-w-full max-h-full transition-transform duration-75 ease-out select-none pointer-events-none",
+              )}
               style={{
                 transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
               }}
@@ -239,14 +283,22 @@ export default function Image({
                   ) : (
                     <ChevronDown className="h-3 w-3 transition-transform duration-200" />
                   )}
-                  {t(isBase64Expanded ? "renderer.base64ImageCollapse" : "renderer.base64Image")}
+                  {t(
+                    isBase64Expanded
+                      ? "renderer.base64ImageCollapse"
+                      : "renderer.base64Image",
+                  )}
                 </button>
-                <div className={`mt-2 transition-all duration-200 ${isBase64Expanded ? 'opacity-100' : 'opacity-50'}`}>
-                  {isBase64Expanded ? src : `${(src || '').substring(0, 50)}...`}
+                <div
+                  className={`mt-2 transition-all duration-200 ${isBase64Expanded ? "opacity-100" : "opacity-50"}`}
+                >
+                  {isBase64Expanded
+                    ? src
+                    : `${(src || "").substring(0, 50)}...`}
                 </div>
               </>
             ) : (
-              src || ''
+              src || ""
             )}
           </span>
         </div>

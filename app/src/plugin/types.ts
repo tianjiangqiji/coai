@@ -7,7 +7,7 @@ export type PluginEditorState = {
 };
 
 export type TestResult = {
-  status: 'idle' | 'testing' | 'success' | 'error';
+  status: "idle" | "testing" | "success" | "error";
   tools?: Array<{
     name: string;
     description: string;
@@ -16,7 +16,7 @@ export type TestResult = {
   error?: string;
 };
 
-export type PluginEditorAction = 
+export type PluginEditorAction =
   | { type: "update-avatar"; payload: string }
   | { type: "update-name"; payload: string }
   | { type: "update-description"; payload: string }
@@ -33,8 +33,8 @@ export const initialPluginState: PluginEditorState = {
 };
 
 export function pluginEditorReducer(
-  state: PluginEditorState, 
-  action: PluginEditorAction
+  state: PluginEditorState,
+  action: PluginEditorAction,
 ): PluginEditorState {
   switch (action.type) {
     case "update-avatar":

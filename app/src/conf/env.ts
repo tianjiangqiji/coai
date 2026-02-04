@@ -49,7 +49,10 @@ export function getWebsocketApi(deploy: boolean): string {
    */
   if (!deploy) return "ws://localhost:8094";
 
-  if (backendEndpoint.startsWith("ws://") || backendEndpoint.startsWith("wss://"))
+  if (
+    backendEndpoint.startsWith("ws://") ||
+    backendEndpoint.startsWith("wss://")
+  )
     return backendEndpoint;
   if (backendEndpoint.startsWith("https://"))
     return `wss://${backendEndpoint.slice(8)}`;
@@ -115,4 +118,3 @@ export function setBuyLink(link: string): void {
   setMemory("buylink", link);
   buyLink = link;
 }
-

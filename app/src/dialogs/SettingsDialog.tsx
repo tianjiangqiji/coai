@@ -384,12 +384,15 @@ function SettingsDialog() {
                       onClick={async () => {
                         try {
                           const token = localStorage.getItem("token");
-                          const response = await fetch(`${window.location.origin}/v1/images/reset`, {
-                            method: "POST",
-                            headers: {
-                              Authorization: token || "",
+                          const response = await fetch(
+                            `${window.location.origin}/v1/images/reset`,
+                            {
+                              method: "POST",
+                              headers: {
+                                Authorization: token || "",
+                              },
                             },
-                          });
+                          );
                           if (response.ok) {
                             toast.success("绘图状态已重置");
                           } else {

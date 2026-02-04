@@ -31,8 +31,8 @@ export function MCPResultDebug({ toolCall }: MCPResultDebugProps): JSX.Element {
   };
 
   const formattedArguments = formatContent(toolCall.function.arguments);
-  const formattedResult = toolCall.result ? formatContent(toolCall.result) : '';
-  const formattedError = toolCall.error ? formatContent(toolCall.error) : '';
+  const formattedResult = toolCall.result ? formatContent(toolCall.result) : "";
+  const formattedError = toolCall.error ? formatContent(toolCall.error) : "";
 
   const [contentHeights, setContentHeights] = useState<{
     arguments: number;
@@ -60,23 +60,25 @@ export function MCPResultDebug({ toolCall }: MCPResultDebugProps): JSX.Element {
 
   const SCROLL_THRESHOLD = 200;
 
-  const ContentWrapper = ({ 
-    children, 
-    shouldScroll, 
-    className 
-  }: { 
-    children: React.ReactNode; 
+  const ContentWrapper = ({
+    children,
+    shouldScroll,
+    className,
+  }: {
+    children: React.ReactNode;
     shouldScroll: boolean;
     className?: string;
   }) => {
     if (shouldScroll) {
       return (
-        <ScrollArea className={`mcp-debug-scroll-area ${className || ''}`}>
+        <ScrollArea className={`mcp-debug-scroll-area ${className || ""}`}>
           {children}
         </ScrollArea>
       );
     }
-    return <div className={`mcp-debug-content ${className || ''}`}>{children}</div>;
+    return (
+      <div className={`mcp-debug-content ${className || ""}`}>{children}</div>
+    );
   };
 
   return (
@@ -98,10 +100,12 @@ export function MCPResultDebug({ toolCall }: MCPResultDebugProps): JSX.Element {
               </TabsTrigger>
             )}
           </TabsList>
-          
+
           <TabsContent value="arguments" className="mt-3">
-            <ContentWrapper shouldScroll={contentHeights.arguments > SCROLL_THRESHOLD}>
-              <pre 
+            <ContentWrapper
+              shouldScroll={contentHeights.arguments > SCROLL_THRESHOLD}
+            >
+              <pre
                 ref={argumentsRef}
                 className="text-xs bg-muted/50 rounded p-3 font-mono whitespace-pre-wrap break-words min-w-0"
               >
@@ -109,11 +113,13 @@ export function MCPResultDebug({ toolCall }: MCPResultDebugProps): JSX.Element {
               </pre>
             </ContentWrapper>
           </TabsContent>
-          
+
           {hasResult && (
             <TabsContent value="result" className="mt-3">
-              <ContentWrapper shouldScroll={contentHeights.result > SCROLL_THRESHOLD}>
-                <pre 
+              <ContentWrapper
+                shouldScroll={contentHeights.result > SCROLL_THRESHOLD}
+              >
+                <pre
                   ref={resultRef}
                   className="text-xs bg-green-500/10 border border-green-500/20 rounded p-3 font-mono whitespace-pre-wrap break-words min-w-0"
                 >
@@ -122,11 +128,13 @@ export function MCPResultDebug({ toolCall }: MCPResultDebugProps): JSX.Element {
               </ContentWrapper>
             </TabsContent>
           )}
-          
+
           {hasError && (
             <TabsContent value="error" className="mt-3">
-              <ContentWrapper shouldScroll={contentHeights.error > SCROLL_THRESHOLD}>
-                <pre 
+              <ContentWrapper
+                shouldScroll={contentHeights.error > SCROLL_THRESHOLD}
+              >
+                <pre
                   ref={errorRef}
                   className="text-xs bg-red-500/10 border border-red-500/20 rounded p-3 font-mono whitespace-pre-wrap break-words min-w-0"
                 >

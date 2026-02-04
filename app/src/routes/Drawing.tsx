@@ -28,8 +28,7 @@ const DRAWING_POLLING_KEY = "drawing_polling_active";
 
 function Drawing() {
   const { t } = useTranslation();
-  const [mainState, setMainState] =
-    useState<DrawingMainState>(initialState);
+  const [mainState, setMainState] = useState<DrawingMainState>(initialState);
   const [submitting, setSubmitting] = useState(false);
   const [polling, setPolling] = useState(() => {
     return localStorage.getItem(DRAWING_POLLING_KEY) === "true";
@@ -72,7 +71,7 @@ function Drawing() {
             const parsedHistory = JSON.parse(cachedHistory);
             if (Array.isArray(parsedHistory) && parsedHistory.length > 0) {
               parsedHistory.forEach((item: any) => {
-                if (!finalHistory.some(i => i.id === item.id)) {
+                if (!finalHistory.some((i) => i.id === item.id)) {
                   finalHistory.push(item);
                 }
               });
@@ -89,11 +88,12 @@ function Drawing() {
         if (cachedResult) {
           try {
             const parsed = JSON.parse(cachedResult);
-            setMainState(prev => ({ ...prev, ...parsed, status: "success" }));
+            setMainState((prev) => ({ ...prev, ...parsed, status: "success" }));
 
-            const exists = finalHistory.some(item =>
-              JSON.stringify(item.images) === JSON.stringify(parsed.images) &&
-              item.message === parsed.message
+            const exists = finalHistory.some(
+              (item) =>
+                JSON.stringify(item.images) === JSON.stringify(parsed.images) &&
+                item.message === parsed.message,
             );
 
             if (!exists && parsed.images && parsed.images.length > 0) {
@@ -109,7 +109,7 @@ function Drawing() {
                   prompt: "已缓存的绘图结果",
                   n: parsed.images.length,
                   size: "1024x1024",
-                }
+                },
               });
             }
           } catch (e) {
@@ -138,13 +138,19 @@ function Drawing() {
 
   // 监听状态变化保存到最新缓存（带异常处理）
   useEffect(() => {
-    if (mainState.status === "success" && (mainState.images.length > 0 || mainState.message)) {
+    if (
+      mainState.status === "success" &&
+      (mainState.images.length > 0 || mainState.message)
+    ) {
       try {
-        localStorage.setItem(DRAWING_CACHE_KEY, JSON.stringify({
-          images: mainState.images,
-          message: mainState.message,
-          modelName: mainState.modelName,
-        }));
+        localStorage.setItem(
+          DRAWING_CACHE_KEY,
+          JSON.stringify({
+            images: mainState.images,
+            message: mainState.message,
+            modelName: mainState.modelName,
+          }),
+        );
       } catch (e) {
         console.warn("[drawing] failed to save current result to cache", e);
       }
@@ -157,16 +163,13 @@ function Drawing() {
     };
   }, []);
 
-  const handleModelChange = useCallback(
-    (_id: string, model: Model | null) => {
-      setCurrentModel(model);
-      setMainState((prev) => ({
-        ...prev,
-        modelName: model?.name,
-      }));
-    },
-    [],
-  );
+  const handleModelChange = useCallback((_id: string, model: Model | null) => {
+    setCurrentModel(model);
+    setMainState((prev) => ({
+      ...prev,
+      modelName: model?.name,
+    }));
+  }, []);
 
   const fetchTaskResults = useCallback(async () => {
     const token = getMemory(tokenField);
@@ -178,7 +181,7 @@ function Drawing() {
       });
       if (response.ok) {
         const res = await response.json();
-        
+
         // 如果后端返回 status: false，说明此时 DB 中还没有该用户的任务
         // 这种情况在点击生成瞬间很常见，应该继续轮询，而不是释放按钮
         if (res.status === false) {
@@ -215,7 +218,8 @@ function Drawing() {
 
               setHistory((prev) => {
                 const exists = prev.some(
-                  (item) => JSON.stringify(item.images) === JSON.stringify(finalImages),
+                  (item) =>
+                    JSON.stringify(item.images) === JSON.stringify(finalImages),
                 );
                 if (exists) return prev;
 
@@ -271,7 +275,7 @@ function Drawing() {
       if (result === "running") {
         setPolling(true);
         setSubmitting(true);
-        setMainState(prev => ({
+        setMainState((prev) => ({
           ...prev,
           status: "running",
         }));
@@ -288,10 +292,10 @@ function Drawing() {
         }
       }
     };
-    
+
     // 初始检查
     checkTask();
-    
+
     // 如果正在提交中，开启轮询
     let timer: NodeJS.Timeout;
     if (submitting || polling) {
@@ -302,7 +306,7 @@ function Drawing() {
         pollTimerRef.current = setInterval(async () => {
           await fetchTaskResults();
         }, 5000);
-      }, 3000); 
+      }, 3000);
 
       return () => {
         clearTimeout(timer);
@@ -364,7 +368,9 @@ function Drawing() {
         if (!response.ok) {
           if (response.status === 409) {
             const detail = await response.json().catch(() => null);
-            throw new Error(detail?.message || "已有未完成的绘图任务，请先完成/领取结果");
+            throw new Error(
+              detail?.message || "已有未完成的绘图任务，请先完成/领取结果",
+            );
           }
           throw new Error(response.statusText || "Request failed");
         }
@@ -391,17 +397,20 @@ function Drawing() {
     [currentModel, t, isMobile],
   );
 
-  const handleApplyHistory = useCallback((item: DrawingHistoryItem) => {
-    setMainState({
-      status: "success",
-      images: item.images,
-      message: item.message,
-      modelName: item.modelName,
-    });
-    if (isMobile) {
-      setMobileTab("generate");
-    }
-  }, [isMobile]);
+  const handleApplyHistory = useCallback(
+    (item: DrawingHistoryItem) => {
+      setMainState({
+        status: "success",
+        images: item.images,
+        message: item.message,
+        modelName: item.modelName,
+      });
+      if (isMobile) {
+        setMobileTab("generate");
+      }
+    },
+    [isMobile],
+  );
 
   const handleDeleteHistory = useCallback((id: string) => {
     setHistory((prev) => prev.filter((item) => item.id !== id));
@@ -426,14 +435,14 @@ function Drawing() {
         onMobileTabChange={setMobileTab}
         className={cn(
           "transition-all duration-300",
-          isMobile && mobileTab !== "prepare" && "hidden"
+          isMobile && mobileTab !== "prepare" && "hidden",
         )}
       />
       <DrawingMain
         {...mainState}
         className={cn(
           "transition-all duration-300",
-          isMobile && mobileTab !== "generate" && "hidden"
+          isMobile && mobileTab !== "generate" && "hidden",
         )}
       />
     </div>

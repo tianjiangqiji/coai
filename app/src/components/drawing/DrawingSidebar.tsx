@@ -58,10 +58,7 @@ import { toast } from "sonner";
 const DRAWING_TAG = "image-generation";
 const PLAN_INCLUDED_TAG = "plan-included";
 const HIDDEN_TAGS = ["official", "fast", "unstable", "free"];
-const FIRST_CLASS_MODELS = new Set([
-  "gpt-image-1-vip",
-  "sora_image",
-]);
+const FIRST_CLASS_MODELS = new Set(["gpt-image-1-vip", "sora_image"]);
 export const RATIO_OPTIONS = [
   { label: "方形 (1:1; 1024x1024)", value: "1024x1024" },
   { label: "横屏 (16:9; 1536x1024)", value: "1536x1024" },
@@ -136,9 +133,7 @@ export default function DrawingSidebar({
   const level = useSelector(levelSelector);
   const drawingModels = useMemo(
     () =>
-      supportModels.filter((model) =>
-        (model.tag ?? []).includes(DRAWING_TAG),
-      ),
+      supportModels.filter((model) => (model.tag ?? []).includes(DRAWING_TAG)),
     [supportModels],
   );
 
@@ -153,40 +148,46 @@ export default function DrawingSidebar({
   const [prompt, setPrompt] = useState<string>("");
   const [image, setImage] = useState<string>("");
 
-  const processFile = useCallback((file: File) => {
-    if (!file.type.startsWith("image/")) {
-      toast.error(t("drawing.invalidFileType") || "请上传图片文件");
-      return;
-    }
+  const processFile = useCallback(
+    (file: File) => {
+      if (!file.type.startsWith("image/")) {
+        toast.error(t("drawing.invalidFileType") || "请上传图片文件");
+        return;
+      }
 
-    if (file.size > 1024 * 1024 * 4) {
-      toast.error(t("drawing.imageTooLarge") || "图片大小不能超过 4MB");
-      return;
-    }
+      if (file.size > 1024 * 1024 * 4) {
+        toast.error(t("drawing.imageTooLarge") || "图片大小不能超过 4MB");
+        return;
+      }
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const base64 = event.target?.result as string;
-      setImage(base64);
-      setMode("edit"); // 自动切换到编辑模式
-    };
-    reader.readAsDataURL(file);
-  }, [t]);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64 = event.target?.result as string;
+        setImage(base64);
+        setMode("edit"); // 自动切换到编辑模式
+      };
+      reader.readAsDataURL(file);
+    },
+    [t],
+  );
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) processFile(file);
   };
 
-  const onPaste = useCallback((e: React.ClipboardEvent) => {
-    const items = e.clipboardData.items;
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].type.indexOf("image") !== -1) {
-        const file = items[i].getAsFile();
-        if (file) processFile(file);
+  const onPaste = useCallback(
+    (e: React.ClipboardEvent) => {
+      const items = e.clipboardData.items;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf("image") !== -1) {
+          const file = items[i].getAsFile();
+          if (file) processFile(file);
+        }
       }
-    }
-  }, [processFile]);
+    },
+    [processFile],
+  );
 
   const [isDragging, setIsDragging] = useState(false);
   const onDragOver = useCallback((e: React.DragEvent) => {
@@ -199,12 +200,15 @@ export default function DrawingSidebar({
     setIsDragging(false);
   }, []);
 
-  const onDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file) processFile(file);
-  }, [processFile]);
+  const onDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+      const file = e.dataTransfer.files?.[0];
+      if (file) processFile(file);
+    },
+    [processFile],
+  );
 
   const isDalleModel = useMemo(() => {
     return selectedId === "gpt-image-1-vip" || selectedId === "sora_image";
@@ -216,7 +220,10 @@ export default function DrawingSidebar({
       return;
     }
 
-    if (!selectedId || !drawingModels.some((model) => model.id === selectedId)) {
+    if (
+      !selectedId ||
+      !drawingModels.some((model) => model.id === selectedId)
+    ) {
       setSelectedId(drawingModels[0].id);
     }
   }, [drawingModels, selectedId]);
@@ -298,7 +305,11 @@ export default function DrawingSidebar({
 
   return (
     <motion.div
-      className={cn("sidebar drawing-sidebar", open && "open", isDragging && "dragging-border")}
+      className={cn(
+        "sidebar drawing-sidebar",
+        open && "open",
+        isDragging && "dragging-border",
+      )}
       initial={{ opacity: 0, x: -24 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
@@ -340,7 +351,9 @@ export default function DrawingSidebar({
               <div className="flex items-center justify-between p-4 border-b">
                 <div className="flex items-center gap-2">
                   <History className="w-5 h-5 text-primary" />
-                  <h3 className="font-semibold text-lg">{t("drawing.historyButton")}</h3>
+                  <h3 className="font-semibold text-lg">
+                    {t("drawing.historyButton")}
+                  </h3>
                 </div>
                 <div className="flex items-center gap-2">
                   {history.length > 0 && (
@@ -363,7 +376,9 @@ export default function DrawingSidebar({
                           </DialogDescription>
                         </DialogHeader>
                         <DialogFooter>
-                          <DialogCancel>{t("conversation.cancel")}</DialogCancel>
+                          <DialogCancel>
+                            {t("conversation.cancel")}
+                          </DialogCancel>
                           <Button
                             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                             onClick={() => onClearHistory?.()}
@@ -374,7 +389,11 @@ export default function DrawingSidebar({
                       </DialogContent>
                     </Dialog>
                   )}
-                  <Button variant="ghost" size="icon" onClick={() => setHistoryOpen(false)}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setHistoryOpen(false)}
+                  >
                     <X className="w-5 h-5" />
                   </Button>
                 </div>
@@ -552,18 +571,23 @@ export default function DrawingSidebar({
                         />
                         <div className="flex flex-col items-center gap-2 text-muted-foreground group-hover:text-primary transition-colors">
                           <Plus className="w-8 h-8" />
-                          <span className="text-xs font-medium">{t("drawing.clickToUpload") || "点击上传图片"}</span>
+                          <span className="text-xs font-medium">
+                            {t("drawing.clickToUpload") || "点击上传图片"}
+                          </span>
                         </div>
                       </div>
                     )}
                     <p className="text-[10px] text-muted-foreground px-1 italic">
-                      {t("drawing.editTip") || "* 图片编辑模式需要上传一张基础图片"}
+                      {t("drawing.editTip") ||
+                        "* 图片编辑模式需要上传一张基础图片"}
                     </p>
                   </div>
                 </div>
 
                 <div className="drawing-form-section">
-                  <Label htmlFor="drawing-ratio">{t("drawing.ratioLabel")}</Label>
+                  <Label htmlFor="drawing-ratio">
+                    {t("drawing.ratioLabel")}
+                  </Label>
                   <Select
                     value={ratio}
                     onValueChange={(value) =>
@@ -595,7 +619,10 @@ export default function DrawingSidebar({
                     id="drawing-prompt"
                     value={prompt}
                     onChange={(event) => setPrompt(event.target.value)}
-                    placeholder={t("drawing.editPromptPlaceholder") || "描述你想要如何修改这张图片..."}
+                    placeholder={
+                      t("drawing.editPromptPlaceholder") ||
+                      "描述你想要如何修改这张图片..."
+                    }
                     disabled={submitting}
                     className="min-h-[100px] resize-y"
                   />
@@ -620,7 +647,9 @@ export default function DrawingSidebar({
             ) : (
               <>
                 <div className="drawing-form-section">
-                  <Label htmlFor="drawing-ratio">{t("drawing.ratioLabel")}</Label>
+                  <Label htmlFor="drawing-ratio">
+                    {t("drawing.ratioLabel")}
+                  </Label>
                   <Select
                     value={ratio}
                     onValueChange={(value) =>
@@ -662,7 +691,9 @@ export default function DrawingSidebar({
                     <SelectContent>
                       {QUANTITY_OPTIONS.map((option) => (
                         <SelectItem key={option} value={option}>
-                          {t("drawing.quantityValue", { count: Number(option) })}
+                          {t("drawing.quantityValue", {
+                            count: Number(option),
+                          })}
                         </SelectItem>
                       ))}
                     </SelectContent>

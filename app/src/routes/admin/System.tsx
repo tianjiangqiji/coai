@@ -422,7 +422,7 @@ function Mail({ data, dispatch, onChange }: CompProps<MailState>) {
               value: e.target.value,
             })
           }
-        placeholder={`${t("admin.system.mailFrom")} <${data.username}@${location.hostname}>`}
+          placeholder={`${t("admin.system.mailFrom")} <${data.username}@${location.hostname}>`}
           className={cn("transition-all duration-300")}
         />
       </ParagraphItem>
@@ -830,7 +830,7 @@ function Common({ form, data, dispatch, onChange }: CompProps<CommonState>) {
   );
 }
 
-function Search({ data, dispatch, onChange}: CompProps<SearchState>) {
+function Search({ data, dispatch, onChange }: CompProps<SearchState>) {
   const { t } = useTranslation();
 
   const supportModels = useSelector(selectSupportModels);

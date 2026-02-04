@@ -221,9 +221,10 @@ function SyncDialog({
         defaultValue={"https://api.chatnio.net"}
         alert={system === "" ? t("admin.coai-format-only") : undefined}
         onSubmit={async (endpoint): Promise<boolean> => {
-          const path = system === "newapi"
-            ? `${endpoint.replace(/\/$/, "")}/api/ratio_config`
-            : getV1Path("/v1/charge", { endpoint });
+          const path =
+            system === "newapi"
+              ? `${endpoint.replace(/\/$/, "")}/api/ratio_config`
+              : getV1Path("/v1/charge", { endpoint });
           const resp = await fetchUpstreamCharge({ endpoint, system });
 
           if (!resp.status || resp.data.length === 0) {
@@ -713,12 +714,8 @@ function ChargeTable({ data, dispatch, onRefresh }: ChargeTableProps) {
                   </p>
                 ))}
               </TableCell>
-              <TableCell>
-                {formatDecimal(charge.input)}
-              </TableCell>
-              <TableCell>
-                {formatDecimal(charge.output)}
-              </TableCell>
+              <TableCell>{formatDecimal(charge.input)}</TableCell>
+              <TableCell>{formatDecimal(charge.output)}</TableCell>
               <TableCell>{t(String(charge.anonymous))}</TableCell>
               <TableCell>
                 <div className={`inline-flex flex-row flex-wrap gap-2`}>

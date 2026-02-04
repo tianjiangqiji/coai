@@ -29,7 +29,7 @@ const initialState: Channel = {
 
 function reducer(state: Channel, action: any): Channel {
   switch (action.type) {
-    case "type":
+    case "type": {
       const isChanged =
         getChannelInfo(state.type).endpoint !== state.endpoint &&
         state.endpoint.trim() !== "";
@@ -37,6 +37,7 @@ function reducer(state: Channel, action: any): Channel {
         ? state.endpoint
         : getChannelInfo(action.value).endpoint;
       return { ...state, endpoint, type: action.value };
+    }
     case "name":
       return { ...state, name: action.value };
     case "models":

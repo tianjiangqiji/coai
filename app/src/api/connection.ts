@@ -257,7 +257,8 @@ export class Connection {
 export class ConnectionStack {
   protected connections: Connection[];
   protected callback?: StreamCallback;
-  protected sessionCallbacks: Map<string, (message: StreamMessage) => void> = new Map();
+  protected sessionCallbacks: Map<string, (message: StreamMessage) => void> =
+    new Map();
 
   public constructor(callback?: StreamCallback) {
     this.connections = [];
@@ -362,12 +363,15 @@ export class ConnectionStack {
       const sessionCallback = this.sessionCallbacks.get(message.session_id);
       sessionCallback && sessionCallback(message);
     }
-    
+
     this.callback && this.callback(id, message);
   }
 
   // 会话管理方法
-  public registerSessionCallback(sessionId: string, callback: (message: StreamMessage) => void): void {
+  public registerSessionCallback(
+    sessionId: string,
+    callback: (message: StreamMessage) => void,
+  ): void {
     this.sessionCallbacks.set(sessionId, callback);
   }
 
