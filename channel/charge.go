@@ -49,9 +49,7 @@ func (m *ChargeManager) Load() {
 	m.NonBillingModels = []string{}
 	for _, charge := range m.Sequence {
 		if !charge.IsBilling() {
-			for _, model := range charge.Models {
-				m.NonBillingModels = append(m.NonBillingModels, model)
-			}
+			m.NonBillingModels = append(m.NonBillingModels, charge.Models...)
 		}
 	}
 }

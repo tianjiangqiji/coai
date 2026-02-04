@@ -283,6 +283,6 @@ func (t *Client) buildURL(req ChatRequest) string {
 	params = append(params, "expired="+strconv.Itoa(req.Expired))
 	params = append(params, fmt.Sprintf("messages=[%s]", t.getMessages(req.Messages)))
 
-	sort.Sort(sort.StringSlice(params))
+	sort.Strings(params)
 	return getFullPath(t.EndPoint) + strings.Join(params, "&")
 }

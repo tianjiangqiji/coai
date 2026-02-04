@@ -179,11 +179,6 @@ func GetBase64ImageMarkdown(b64 string, _desc ...string) string {
 	// Extracts the image type from base64 string (e.g., "data:image/png;base64,...") or defaults to png
 	var imageType = "png"
 	if strings.HasPrefix(b64, "data:image/") {
-		parts := strings.Split(b64[11:], ";")
-		if len(parts) > 0 {
-			imageType = parts[0]
-		}
-
 		// If it's already a full data URI, return as is (wrapped in markdown)
 		// But first extract the raw base64 to avoid double prefixing if we re-wrap it
 		// Actually, the simplest fix is to check if it's already a full data URI and just use it

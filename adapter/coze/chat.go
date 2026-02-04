@@ -184,20 +184,20 @@ func (c *ChatInstance) CreateStreamChatRequest(props *adaptercommon.ChatProps, c
 		if strings.Contains(err.Body, "\"code\":") {
 			errorResp := processChatErrorResponse(err.Body)
 			if errorResp != nil && errorResp.Data.Code != 0 {
-				return errors.New(fmt.Sprintf("coze error: %s (code: %d)", errorResp.Data.Msg, errorResp.Data.Code))
+				return fmt.Errorf("coze error: %s (code: %d)", errorResp.Data.Msg, errorResp.Data.Code)
 			}
 
 			var genericResp map[string]interface{}
 			if jsonErr := json.Unmarshal([]byte(err.Body), &genericResp); jsonErr == nil {
 				errMsg, _ := json.Marshal(genericResp)
-				return errors.New(fmt.Sprintf("coze error: %s", string(errMsg)))
+				return fmt.Errorf("coze error: %s", string(errMsg))
 			}
 		}
 
 		if err.Error != nil {
 			return err.Error
 		}
-		return errors.New(fmt.Sprintf("coze error: unexpected error in stream request"))
+		return errors.New("coze error: unexpected error in stream request")
 	}
 
 	return nil

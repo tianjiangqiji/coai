@@ -54,9 +54,7 @@ func ProcessKey(c *gin.Context, key string) *auth.User {
 func ProcessAuthorization(c *gin.Context) *auth.User {
 	k := strings.TrimSpace(c.GetHeader("Authorization"))
 	if k != "" {
-		if strings.HasPrefix(k, "Bearer ") {
-			k = strings.TrimPrefix(k, "Bearer ")
-		}
+		k = strings.TrimPrefix(k, "Bearer ")
 
 		if strings.HasPrefix(k, "sk-") {
 			// api agent

@@ -186,7 +186,7 @@ func UseSharedConversation(db *sql.DB, user *auth.User, hash string) *Conversati
 }
 
 func (c *Conversation) LoadSharing(db *sql.DB, hash string) {
-	if strings.TrimSpace(hash) == "" || c.Shared == true {
+	if strings.TrimSpace(hash) == "" || c.Shared {
 		return
 	}
 

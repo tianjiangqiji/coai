@@ -79,7 +79,7 @@ func processPersistentChatSession(db *sql.DB, cache *redis.Client, user *auth.Us
 
 	// 权限和订阅检查
 	segment := adapter.ClearMessages(req.Model, req.Messages)
-	check, plan, usageDetail := auth.CanEnableModelWithSubscription(db, cache, user, req.Model, segment)
+	plan, usageDetail, check := auth.CanEnableModelWithSubscription(db, cache, user, req.Model, segment)
 	if check != nil {
 		return fmt.Errorf("permission denied: %v", check)
 	}

@@ -119,18 +119,12 @@ func LoadConversationList(db *sql.DB, userId int64) []Conversation {
 
 func (c *Conversation) DeleteConversation(db *sql.DB) bool {
 	_, err := globals.ExecDb(db, "DELETE FROM conversation WHERE user_id = ? AND conversation_id = ?", c.UserID, c.Id)
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
 
 func (c *Conversation) RenameConversation(db *sql.DB, name string) bool {
 	_, err := globals.ExecDb(db, "UPDATE conversation SET conversation_name = ? WHERE user_id = ? AND conversation_id = ?", name, c.UserID, c.Id)
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
 
 func DeleteAllConversations(db *sql.DB, user auth.User) error {

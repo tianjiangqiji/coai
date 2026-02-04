@@ -86,7 +86,7 @@ func processEventContent(event string, eventData string) (content string, comple
 		streamData := processChatStreamData(eventData)
 		if streamData != nil {
 			if streamData.Code != 0 && streamData.Msg != "" {
-				return "", false, errors.New(fmt.Sprintf("coze error: %s (code: %d)", streamData.Msg, streamData.Code))
+				return "", false, fmt.Errorf("coze error: %s (code: %d)", streamData.Msg, streamData.Code)
 			}
 		}
 		return "", false, errors.New("coze error: conversation failed")
@@ -96,17 +96,17 @@ func processEventContent(event string, eventData string) (content string, comple
 
 	errorResp := processChatErrorResponse(eventData)
 	if errorResp != nil && errorResp.Data.Code != 0 {
-		return "", false, errors.New(fmt.Sprintf("coze error: %s (code: %d)", errorResp.Data.Msg, errorResp.Data.Code))
+		return "", false, fmt.Errorf("coze error: %s (code: %d)", errorResp.Data.Msg, errorResp.Data.Code)
 	}
 
 	streamData := processChatStreamData(eventData)
 	if streamData != nil {
 		if streamData.Code != 0 && streamData.Msg != "" {
-			return "", false, errors.New(fmt.Sprintf("coze error: %s (code: %d)", streamData.Msg, streamData.Code))
+			return "", false, fmt.Errorf("coze error: %s (code: %d)", streamData.Msg, streamData.Code)
 		}
 
 		if streamData.LastError.Code != 0 && streamData.LastError.Msg != "" {
-			return "", false, errors.New(fmt.Sprintf("coze error: %s (code: %d)", streamData.LastError.Msg, streamData.LastError.Code))
+			return "", false, fmt.Errorf("coze error: %s (code: %d)", streamData.LastError.Msg, streamData.LastError.Code)
 		}
 	}
 

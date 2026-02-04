@@ -51,7 +51,7 @@ func processStreamResponse(data string) (*globals.Chunk, bool, error) {
 		}, true, nil
 	case "error":
 		if streamData.Code != "" && streamData.Message != "" {
-			return nil, false, errors.New(fmt.Sprintf("dify error: %s (code: %s)", streamData.Message, streamData.Code))
+			return nil, false, fmt.Errorf("dify error: %s (code: %s)", streamData.Message, streamData.Code)
 		}
 		return nil, false, errors.New("dify error: conversation failed")
 	case "workflow_started", "node_started", "node_finished", "workflow_finished", "iteration_started", "iteration_next", "iteration_finished", "iteration_completed", "parallel_branch_started", "parallel_branch_finished", "ping":
@@ -60,7 +60,7 @@ func processStreamResponse(data string) (*globals.Chunk, bool, error) {
 
 	errorResp := processChatErrorResponse(data)
 	if errorResp != nil {
-		return nil, false, errors.New(fmt.Sprintf("dify error: %s (code: %s)", errorResp.Message, errorResp.Code))
+		return nil, false, fmt.Errorf("dify error: %s (code: %s)", errorResp.Message, errorResp.Code)
 	}
 
 	return &globals.Chunk{Content: ""}, false, nil

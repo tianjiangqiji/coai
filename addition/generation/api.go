@@ -54,7 +54,7 @@ func GenerateAPI(c *gin.Context) {
 		return
 	}
 
-	check, plan, _ := auth.CanEnableModelWithSubscription(db, cache, user, form.Model, []globals.Message{})
+	plan, _, check := auth.CanEnableModelWithSubscription(db, cache, user, form.Model, []globals.Message{})
 	if check != nil {
 		conn.Send(globals.GenerationSegmentResponse{
 			Message: check.Error(),

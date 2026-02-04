@@ -26,7 +26,7 @@ func getStatusCode(action string, response *CommonResponse) error {
 	case NudeCode:
 		return fmt.Errorf("prompt violates the content policy of midjourney, the request is rejected")
 	default:
-		return fmt.Errorf(fmt.Sprintf("unknown error from midjourney (code: %d, description: %s)", code, response.Description))
+		return fmt.Errorf("unknown error from midjourney (code: %d, description: %s)", code, response.Description)
 	}
 }
 

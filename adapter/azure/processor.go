@@ -141,7 +141,7 @@ func (c *ChatInstance) ProcessLine(data string, isCompletionType bool) (*globals
 	}
 
 	if form := processChatErrorResponse(data); form != nil {
-		return &globals.Chunk{Content: ""}, errors.New(fmt.Sprintf("openai error: %s (type: %s)", form.Error.Message, form.Error.Type))
+		return &globals.Chunk{Content: ""}, fmt.Errorf("openai error: %s (type: %s)", form.Error.Message, form.Error.Type)
 	}
 
 	globals.Warn(fmt.Sprintf("openai error: cannot parse chat completion response: %s", utils.TruncateLog(data)))

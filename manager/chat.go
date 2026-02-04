@@ -282,7 +282,7 @@ func ChatHandler(conn *Connection, user *auth.User, instance *conversation.Conve
 	thinkState := instance.GetThink()
 	segment = utils.ApplyThinkingDirective(segment, thinkState)
 
-	check, plan, usageDetail := auth.CanEnableModelWithSubscription(db, cache, user, model, segment)
+	plan, usageDetail, check := auth.CanEnableModelWithSubscription(db, cache, user, model, segment)
 	conn.Send(globals.ChatSegmentResponse{
 		Conversation: instance.GetId(),
 	})

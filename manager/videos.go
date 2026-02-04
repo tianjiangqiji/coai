@@ -68,7 +68,7 @@ func VideosRelayAPI(c *gin.Context) {
 	messages := []globals.Message{
 		{Role: globals.User, Content: prompt},
 	}
-	check, plan, _ := checkEnableState(db, cache, user, form.Model, messages)
+	plan, _, check := checkEnableState(db, cache, user, form.Model, messages)
 	if check != nil {
 		sendErrorResponse(c, check, "quota_exceeded_error")
 		return
@@ -142,7 +142,7 @@ func VideosRelayAPI(c *gin.Context) {
 			}
 		}
 	} else {
-		globals.Warn(fmt.Sprintf("[video] job.Id is empty, cannot save task_id"))
+		globals.Warn("[video] job.Id is empty, cannot save task_id")
 	}
 
 	c.JSON(http.StatusOK, job)

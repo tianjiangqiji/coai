@@ -43,7 +43,8 @@ func (c *ChatInstance) CreateImageRequest(props ImageProps) ([]string, []string,
 			base64Data = base64Data[index+1:]
 		}
 
-		data, err := utils.Base64Decode(base64Data)
+		var data []byte
+		data, err = utils.Base64Decode(base64Data)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -77,7 +78,7 @@ func (c *ChatInstance) CreateImageRequest(props ImageProps) ([]string, []string,
 	}
 
 	if err != nil || res == nil {
-		return nil, nil, fmt.Errorf(err.Error())
+		return nil, nil, err
 	}
 
 	data := utils.MapToStruct[ImageResponse](res)
