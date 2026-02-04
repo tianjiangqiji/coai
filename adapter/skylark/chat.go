@@ -168,4 +168,6 @@ func (c *ChatInstance) CreateStreamChatRequest(props *adaptercommon.ChatProps, c
 			return err
 		}
 	}
+
+	return nil
 }
