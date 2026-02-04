@@ -4,8 +4,9 @@ import (
 	"chat/globals"
 	"chat/utils"
 	"context"
-	"github.com/gin-gonic/gin"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func getLatestBroadcast(c *gin.Context) *Broadcast {

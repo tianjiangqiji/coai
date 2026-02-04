@@ -100,7 +100,7 @@ func (c *ChatInstance) ProcessLine(data string) (string, error) {
 
 		delta := form.Choices[0].Delta
 
-		if c.isFirstReasoning == false && !c.isReasonOver && delta.ReasoningContent == nil {
+		if !c.isFirstReasoning && !c.isReasonOver && delta.ReasoningContent == nil {
 			c.isReasonOver = true
 			if delta.Content != "" {
 				return fmt.Sprintf("\n</think>\n\n%s", delta.Content), nil
@@ -122,7 +122,7 @@ func (c *ChatInstance) ProcessLine(data string) (string, error) {
 
 	if form := processChatErrorResponse(data); form != nil {
 		if form.Error.Message != "" {
-			return "", errors.New(fmt.Sprintf("deepseek error: %s", form.Error.Message))
+			return "", fmt.Errorf("deepseek error: %s", form.Error.Message)
 		}
 	}
 
@@ -181,7 +181,7 @@ func (c *ChatInstance) CreateStreamChatRequest(props *adaptercommon.ChatProps, c
 			if form.Error.Type == "" && form.Error.Message == "" {
 				return errors.New(utils.ToMarkdownCode("json", err.Body))
 			}
-			return errors.New(fmt.Sprintf("deepseek error: %s (type: %s)", form.Error.Message, form.Error.Type))
+			return fmt.Errorf("deepseek error: %s (type: %s)", form.Error.Message, form.Error.Type)
 		}
 		return err.Error
 	}

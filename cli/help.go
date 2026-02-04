@@ -11,5 +11,5 @@ Commands:
 `
 
 func Help() {
-	fmt.Println(fmt.Sprintf("%s", Prompt))
+	fmt.Println(Prompt)
 }

@@ -8,7 +8,6 @@ import (
 	"fmt"
 
 	"github.com/go-sql-driver/mysql"
-	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/spf13/viper"
 )
@@ -117,7 +116,7 @@ func ConnectDatabase() *sql.DB {
 	CreateDrawingTaskTable(db)
 
 	if err := doMigration(db); err != nil {
-		fmt.Println(fmt.Sprintf("migration error: %s", err))
+		fmt.Printf("migration error: %s\n", err)
 	}
 
 	DB = db

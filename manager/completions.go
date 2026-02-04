@@ -29,7 +29,7 @@ func NativeChatHandler(c *gin.Context, user *auth.User, model string, message []
 	segment := web.ToSearched(db, cache, user, model, enableWeb, message)
 	thinkState := globals.ResolveThinkingPreference(model, nil)
 	segment = utils.ApplyThinkingDirective(segment, thinkState)
-	check, plan, usageDetail := auth.CanEnableModelWithSubscription(db, cache, user, model, segment)
+	plan, usageDetail, check := auth.CanEnableModelWithSubscription(db, cache, user, model, segment)
 
 	if check != nil {
 		return check.Error(), 0

@@ -131,7 +131,7 @@ func (c *ChatInstance) ProcessLine(data string, isCompletionType bool) (*globals
 	}
 
 	if form := processChatErrorResponse(data); form != nil {
-		return &globals.Chunk{Content: ""}, errors.New(fmt.Sprintf("chatglm error: %s (type: %s)", form.Error.Message, form.Error.Type))
+		return &globals.Chunk{Content: ""}, fmt.Errorf("chatglm error: %s (type: %s)", form.Error.Message, form.Error.Type)
 	}
 
 	globals.Warn(fmt.Sprintf("chatglm error: cannot parse chat completion response: %s", utils.TruncateLog(data)))

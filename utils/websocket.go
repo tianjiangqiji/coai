@@ -63,10 +63,7 @@ func CheckUpgrader(c *gin.Context, strict bool) *websocket.Upgrader {
 				return true
 			}
 			origin := c.Request.Header.Get("Origin")
-			if globals.OriginIsAllowed(origin) {
-				return true
-			}
-			return false
+			return globals.OriginIsAllowed(origin)
 		},
 	}
 }

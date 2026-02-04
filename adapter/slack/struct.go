@@ -4,10 +4,11 @@ import (
 	factory "chat/adapter/common"
 	"chat/globals"
 	"fmt"
+	"strings"
+
 	"github.com/bincooo/claude-api"
 	"github.com/bincooo/claude-api/types"
 	"github.com/bincooo/claude-api/vars"
-	"strings"
 )
 
 type ChatInstance struct {
@@ -68,20 +69,14 @@ func (c *ChatInstance) FormatMessage(message []globals.Message) string {
 }
 
 func (c *ChatInstance) ProcessPartialResponse(res chan types.PartialResponse, hook globals.Hook) error {
-	for {
-		select {
-		case data, ok := <-res:
-			if !ok {
-				return nil
-			}
-
-			if data.Error != nil {
-				return data.Error
-			} else if data.Text != "" {
-				if err := hook(&globals.Chunk{Content: data.Text}); err != nil {
-					return err
-				}
+	for data := range res {
+		if data.Error != nil {
+			return data.Error
+		} else if data.Text != "" {
+			if err := hook(&globals.Chunk{Content: data.Text}); err != nil {
+				return err
 			}
 		}
 	}
+	return nil
 }

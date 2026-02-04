@@ -3,8 +3,9 @@ package channel
 import (
 	"chat/utils"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type SyncChargeForm struct {

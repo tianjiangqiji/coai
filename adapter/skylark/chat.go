@@ -145,7 +145,7 @@ func (c *ChatInstance) CreateStreamChatRequest(props *adaptercommon.ChatProps, c
 			delta := recv.Choices[0].Delta
 
 			// Handle reasoning content
-			if c.isFirstReasoning == false && !c.isReasonOver && delta.ReasoningContent == nil {
+			if !c.isFirstReasoning && !c.isReasonOver && delta.ReasoningContent == nil {
 				c.isReasonOver = true
 				if delta.Content != "" {
 					choice.Content = fmt.Sprintf("\n</think>\n\n%s", delta.Content)
@@ -168,5 +168,4 @@ func (c *ChatInstance) CreateStreamChatRequest(props *adaptercommon.ChatProps, c
 			return err
 		}
 	}
-	return nil
 }

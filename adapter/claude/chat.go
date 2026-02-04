@@ -213,7 +213,7 @@ func (c *ChatInstance) CreateStreamChatRequest(props *adaptercommon.ChatProps, h
 				return errors.New(utils.ToMarkdownCode("json", err.Body))
 			}
 
-			return errors.New(fmt.Sprintf("%s (type: %s)", form.Error.Message, form.Error.Type))
+			return fmt.Errorf("%s (type: %s)", form.Error.Message, form.Error.Type)
 		}
 		return fmt.Errorf("%s\n%s", err.Error, errors.New(utils.ToMarkdownCode("json", err.Body)))
 	}

@@ -11,15 +11,15 @@ import (
 )
 
 var (
-	logImageRegex        = regexp.MustCompile(`(data:image/\w+;base64,)([\w+/=]{21,})`)
-	urlRegex             = regexp.MustCompile(`(https?://\S+)`)
-	markdownImageRegex   = regexp.MustCompile(`!\[.*?\]\((https?://\S+)\)`)
-	markdownBase64Regex  = regexp.MustCompile(`!\[.*?\]\((data:image/\w+;base64,[\w+/=]+)\)`)
-	base64Regex          = regexp.MustCompile(`(data:image/\w+;base64,[\w+/=]+)`)
-	fileBlockRegexp      = regexp.MustCompile("(?s)```file\\n\\[\\[.*?]]\\n.*?\\n```\\n*")
-	externalImageRegex   = regexp.MustCompile(`(https?://\S+\.(?:png|jpg|jpeg|gif|webp|heif|heic|bmp|svg|ico)(?:\?\S+)?)`)
-	unicodeRegex         = regexp.MustCompile(`\\u([0-9a-fA-F]{4})`)
-	escapeCharRegex      = regexp.MustCompile(`\\([nrtvfb])`)
+	logImageRegex       = regexp.MustCompile(`(data:image/\w+;base64,)([\w+/=]{21,})`)
+	urlRegex            = regexp.MustCompile(`(https?://\S+)`)
+	markdownImageRegex  = regexp.MustCompile(`!\[.*?\]\((https?://\S+)\)`)
+	markdownBase64Regex = regexp.MustCompile(`!\[.*?\]\((data:image/\w+;base64,[\w+/=]+)\)`)
+	base64Regex         = regexp.MustCompile(`(data:image/\w+;base64,[\w+/=]+)`)
+	fileBlockRegexp     = regexp.MustCompile("(?s)```file\\n\\[\\[.*?]]\\n.*?\\n```\\n*")
+	externalImageRegex  = regexp.MustCompile(`(https?://\S+\.(?:png|jpg|jpeg|gif|webp|heif|heic|bmp|svg|ico)(?:\?\S+)?)`)
+	unicodeRegex        = regexp.MustCompile(`\\u([0-9a-fA-F]{4})`)
+	escapeCharRegex     = regexp.MustCompile(`\\([nrtvfb])`)
 )
 
 func GetRandomInt(min int, max int) int {
@@ -179,11 +179,6 @@ func GetBase64ImageMarkdown(b64 string, _desc ...string) string {
 	// Extracts the image type from base64 string (e.g., "data:image/png;base64,...") or defaults to png
 	var imageType = "png"
 	if strings.HasPrefix(b64, "data:image/") {
-		parts := strings.Split(b64[11:], ";")
-		if len(parts) > 0 {
-			imageType = parts[0]
-		}
-
 		// If it's already a full data URI, return as is (wrapped in markdown)
 		// But first extract the raw base64 to avoid double prefixing if we re-wrap it
 		// Actually, the simplest fix is to check if it's already a full data URI and just use it

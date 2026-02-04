@@ -2,8 +2,9 @@ package connection
 
 import (
 	"database/sql"
-	"github.com/go-redis/redis/v8"
 	"time"
+
+	"github.com/go-redis/redis/v8"
 )
 
 var tick time.Duration = 5 * time.Second // tick every 5 second

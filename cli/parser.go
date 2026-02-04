@@ -13,7 +13,7 @@ func GetArgs() []string {
 
 func GetArg(args []string, idx int) string {
 	if len(args) <= idx {
-		log.Fatalln(fmt.Sprintf("not enough arguments: %d", idx))
+		log.Fatalf("not enough arguments: %d", idx)
 	}
 	return args[idx]
 }
@@ -21,7 +21,7 @@ func GetArg(args []string, idx int) string {
 func GetArgInt(args []string, idx int) int {
 	i, err := strconv.Atoi(GetArg(args, idx))
 	if err != nil {
-		log.Fatalln(fmt.Sprintf("invalid argument: %s", err.Error()))
+		log.Fatalf("invalid argument: %s", err.Error())
 	}
 	return i
 }
@@ -29,7 +29,7 @@ func GetArgInt(args []string, idx int) int {
 func GetArgFloat(args []string, idx int, bitSize int) float64 {
 	f, err := strconv.ParseFloat(GetArg(args, idx), bitSize)
 	if err != nil {
-		log.Fatalln(fmt.Sprintf("invalid argument: %s", err.Error()))
+		log.Fatalf("invalid argument: %s", err.Error())
 	}
 	return f
 }
@@ -45,7 +45,7 @@ func GetArgFloat64(args []string, idx int) float64 {
 func GetArgBool(args []string, idx int) bool {
 	b, err := strconv.ParseBool(GetArg(args, idx))
 	if err != nil {
-		log.Fatalln(fmt.Sprintf("invalid argument: %s", err.Error()))
+		log.Fatalf("invalid argument: %s", err.Error())
 	}
 	return b
 }
@@ -53,7 +53,7 @@ func GetArgBool(args []string, idx int) bool {
 func GetArgInt64(args []string, idx int) int64 {
 	i, err := strconv.ParseInt(GetArg(args, idx), 10, 64)
 	if err != nil {
-		log.Fatalln(fmt.Sprintf("invalid argument: %s", err.Error()))
+		log.Fatalf("invalid argument: %s", err.Error())
 	}
 	return i
 }
@@ -63,9 +63,9 @@ func GetArgString(args []string, idx int) string {
 }
 
 func outputError(err error) {
-	fmt.Println(fmt.Sprintf("\033[31m[cli] error: %s\033[0m", err.Error()))
+	fmt.Printf("\033[31m[cli] error: %s\033[0m\n", err.Error())
 }
 
 func outputInfo(t, msg string) {
-	fmt.Println(fmt.Sprintf("[cli] %s: %s", t, msg))
+	fmt.Printf("[cli] %s: %s\n", t, msg)
 }

@@ -3,8 +3,9 @@ package manager
 import (
 	"chat/auth"
 	"chat/utils"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type BillingResponse struct {

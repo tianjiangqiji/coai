@@ -67,7 +67,7 @@ func RefreshPackage(db *sql.DB, user *User) *GiftResponse {
 	}
 
 	resp := Cert(user.Username)
-	if resp == nil || resp.Status == false {
+	if resp == nil || !resp.Status {
 		return nil
 	}
 

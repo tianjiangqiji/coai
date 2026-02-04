@@ -55,13 +55,13 @@ func CanEnableModel(db *sql.DB, user *User, model string, messages []globals.Mes
 	return nil
 }
 
-func CanEnableModelWithSubscription(db *sql.DB, cache *redis.Client, user *User, model string, messages []globals.Message) (canEnable error, usePlan bool, usageDetail *SubscriptionUsageDetail) {
+func CanEnableModelWithSubscription(db *sql.DB, cache *redis.Client, user *User, model string, messages []globals.Message) (usePlan bool, usageDetail *SubscriptionUsageDetail, canEnable error) {
 	// use subscription quota first
 	if user != nil {
 		if detail, ok := HandleSubscriptionUsage(db, cache, user, model); ok {
-			return nil, true, detail
+			return true, detail, nil
 		}
 	}
 
-	return CanEnableModel(db, user, model, messages), false, nil
+	return false, nil, CanEnableModel(db, user, model, messages)
 }
