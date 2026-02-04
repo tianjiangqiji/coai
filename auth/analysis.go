@@ -3,8 +3,9 @@ package auth
 import (
 	"chat/utils"
 	"fmt"
-	"github.com/go-redis/redis/v8"
 	"time"
+
+	"github.com/go-redis/redis/v8"
 )
 
 func getMonth() string {

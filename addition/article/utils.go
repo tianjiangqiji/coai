@@ -4,6 +4,7 @@ import (
 	"chat/globals"
 	"chat/utils"
 	"fmt"
+
 	"github.com/lukasjarosch/go-docx"
 )
 

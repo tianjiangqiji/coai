@@ -4,10 +4,11 @@ import (
 	factory "chat/adapter/common"
 	"chat/globals"
 	"fmt"
+	"strings"
+
 	"github.com/bincooo/claude-api"
 	"github.com/bincooo/claude-api/types"
 	"github.com/bincooo/claude-api/vars"
-	"strings"
 )
 
 type ChatInstance struct {

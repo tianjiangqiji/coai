@@ -6,8 +6,9 @@ import (
 	"chat/manager"
 	"chat/utils"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 type StreamProgressResponse struct {

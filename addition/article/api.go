@@ -5,8 +5,9 @@ import (
 	"chat/globals"
 	"chat/utils"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 type WebsocketArticleForm struct {

@@ -2,13 +2,14 @@ package channel
 
 import (
 	"chat/adapter"
-	"chat/adapter/common"
+	adaptercommon "chat/adapter/common"
 	"chat/globals"
 	"chat/utils"
 	"fmt"
-	"github.com/go-redis/redis/v8"
 	"strconv"
 	"time"
+
+	"github.com/go-redis/redis/v8"
 )
 
 func NewChatRequest(group string, props *adaptercommon.ChatProps, hook globals.Hook) error {

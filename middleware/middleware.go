@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"chat/connection"
+
 	"github.com/gin-gonic/gin"
 )
 

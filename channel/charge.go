@@ -3,6 +3,7 @@ package channel
 import (
 	"chat/globals"
 	"chat/utils"
+
 	"github.com/spf13/viper"
 )
 

@@ -3,10 +3,11 @@ package conversation
 import (
 	"chat/auth"
 	"chat/utils"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 type ShareForm struct {

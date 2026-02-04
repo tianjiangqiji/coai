@@ -2,6 +2,7 @@ package adapter
 
 import (
 	"chat/adapter/midjourney"
+
 	"github.com/gin-gonic/gin"
 )
 

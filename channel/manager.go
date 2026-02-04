@@ -4,8 +4,9 @@ import (
 	"chat/globals"
 	"chat/utils"
 	"errors"
-	"github.com/spf13/viper"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 var ConduitInstance *Manager

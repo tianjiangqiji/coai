@@ -3,10 +3,11 @@ package card
 import (
 	"chat/globals"
 	"chat/manager"
-	"github.com/gin-gonic/gin"
-	"github.com/russross/blackfriday/v2"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/russross/blackfriday/v2"
 )
 
 type RequestForm struct {

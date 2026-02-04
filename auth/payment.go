@@ -5,24 +5,25 @@ import (
 	"chat/utils"
 	"database/sql"
 	"errors"
+
 	"github.com/go-redis/redis/v8"
 	"github.com/goccy/go-json"
 	"github.com/spf13/viper"
 )
 
 type usageLog struct {
-	UserID              int64
-	Type                string
-	Model               string
-	InputTokens         int
-	OutputTokens        int
-	QuotaCost           float32
-	IsPlan              bool
-	Amount              float32
-	QuotaChange         float32
-	SubscriptionLevel   int
-	SubscriptionMonths  int
-	Detail              string
+	UserID             int64
+	Type               string
+	Model              string
+	InputTokens        int
+	OutputTokens       int
+	QuotaCost          float32
+	IsPlan             bool
+	Amount             float32
+	QuotaChange        float32
+	SubscriptionLevel  int
+	SubscriptionMonths int
+	Detail             string
 }
 
 func createUsageLog(db *sql.DB, log *usageLog) error {

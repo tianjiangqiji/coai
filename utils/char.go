@@ -11,15 +11,15 @@ import (
 )
 
 var (
-	logImageRegex        = regexp.MustCompile(`(data:image/\w+;base64,)([\w+/=]{21,})`)
-	urlRegex             = regexp.MustCompile(`(https?://\S+)`)
-	markdownImageRegex   = regexp.MustCompile(`!\[.*?\]\((https?://\S+)\)`)
-	markdownBase64Regex  = regexp.MustCompile(`!\[.*?\]\((data:image/\w+;base64,[\w+/=]+)\)`)
-	base64Regex          = regexp.MustCompile(`(data:image/\w+;base64,[\w+/=]+)`)
-	fileBlockRegexp      = regexp.MustCompile("(?s)```file\\n\\[\\[.*?]]\\n.*?\\n```\\n*")
-	externalImageRegex   = regexp.MustCompile(`(https?://\S+\.(?:png|jpg|jpeg|gif|webp|heif|heic|bmp|svg|ico)(?:\?\S+)?)`)
-	unicodeRegex         = regexp.MustCompile(`\\u([0-9a-fA-F]{4})`)
-	escapeCharRegex      = regexp.MustCompile(`\\([nrtvfb])`)
+	logImageRegex       = regexp.MustCompile(`(data:image/\w+;base64,)([\w+/=]{21,})`)
+	urlRegex            = regexp.MustCompile(`(https?://\S+)`)
+	markdownImageRegex  = regexp.MustCompile(`!\[.*?\]\((https?://\S+)\)`)
+	markdownBase64Regex = regexp.MustCompile(`!\[.*?\]\((data:image/\w+;base64,[\w+/=]+)\)`)
+	base64Regex         = regexp.MustCompile(`(data:image/\w+;base64,[\w+/=]+)`)
+	fileBlockRegexp     = regexp.MustCompile("(?s)```file\\n\\[\\[.*?]]\\n.*?\\n```\\n*")
+	externalImageRegex  = regexp.MustCompile(`(https?://\S+\.(?:png|jpg|jpeg|gif|webp|heif|heic|bmp|svg|ico)(?:\?\S+)?)`)
+	unicodeRegex        = regexp.MustCompile(`\\u([0-9a-fA-F]{4})`)
+	escapeCharRegex     = regexp.MustCompile(`\\([nrtvfb])`)
 )
 
 func GetRandomInt(min int, max int) int {
