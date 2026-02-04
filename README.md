@@ -123,8 +123,8 @@ go build -mod=vendor -v -o chatnio.exe
 开发（热重载）:
 ```bash
 cd app
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 预览/构建（生产）：
