@@ -5,7 +5,7 @@ import { tokenField } from "@/conf/bootstrap.ts";
 export interface SessionStatus {
   session_id: string;
   conversation_id: number;
-  status: 'pending' | 'processing' | 'completed' | 'error' | 'cancelled';
+  status: "pending" | "processing" | "completed" | "error" | "cancelled";
   model: string;
   progress: string;
   total_progress: string;
@@ -30,65 +30,80 @@ export interface SessionListResponse {
 }
 
 // 获取会话状态
-export async function getSessionStatus(sessionId: string): Promise<SessionResponse> {
+export async function getSessionStatus(
+  sessionId: string,
+): Promise<SessionResponse> {
   try {
     const token = getMemory(tokenField);
-    const response = await fetch(`${websocketEndpoint}/session/status/${sessionId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `${websocketEndpoint}/session/status/${sessionId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       },
-    });
-    
+    );
+
     return await response.json();
   } catch (error) {
-    console.error('Failed to get session status:', error);
+    console.error("Failed to get session status:", error);
     return {
       status: false,
-      message: 'Network error',
+      message: "Network error",
     };
   }
 }
 
 // 取消会话
-export async function cancelSession(sessionId: string): Promise<SessionResponse> {
+export async function cancelSession(
+  sessionId: string,
+): Promise<SessionResponse> {
   try {
     const token = getMemory(tokenField);
-    const response = await fetch(`${websocketEndpoint}/session/cancel/${sessionId}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `${websocketEndpoint}/session/cancel/${sessionId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       },
-    });
-    
+    );
+
     return await response.json();
   } catch (error) {
-    console.error('Failed to cancel session:', error);
+    console.error("Failed to cancel session:", error);
     return {
       status: false,
-      message: 'Network error',
+      message: "Network error",
     };
   }
 }
 
 // 重连到会话
-export async function reconnectToSession(sessionId: string): Promise<SessionResponse> {
+export async function reconnectToSession(
+  sessionId: string,
+): Promise<SessionResponse> {
   try {
     const token = getMemory(tokenField);
-    const response = await fetch(`${websocketEndpoint}/session/reconnect/${sessionId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `${websocketEndpoint}/session/reconnect/${sessionId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       },
-    });
-    
+    );
+
     return await response.json();
   } catch (error) {
-    console.error('Failed to reconnect to session:', error);
+    console.error("Failed to reconnect to session:", error);
     return {
       status: false,
-      message: 'Network error',
+      message: "Network error",
     };
   }
 }
@@ -99,38 +114,43 @@ export async function getUserSessions(): Promise<SessionListResponse> {
     const token = getMemory(tokenField);
     const response = await fetch(`${websocketEndpoint}/session/list`, {
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     });
-    
+
     return await response.json();
   } catch (error) {
-    console.error('Failed to get user sessions:', error);
+    console.error("Failed to get user sessions:", error);
     return {
       status: false,
-      message: 'Network error',
+      message: "Network error",
     };
   }
 }
 
 // 获取对话的活跃会话
-export async function getConversationSession(conversationId: number): Promise<SessionResponse> {
+export async function getConversationSession(
+  conversationId: number,
+): Promise<SessionResponse> {
   try {
     const token = getMemory(tokenField);
-    const response = await fetch(`${websocketEndpoint}/session/conversation/${conversationId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `${websocketEndpoint}/session/conversation/${conversationId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       },
-    });
-    
+    );
+
     return await response.json();
   } catch (error) {
-    console.error('Failed to get conversation session:', error);
+    console.error("Failed to get conversation session:", error);
     return {
       status: false,
-      message: 'Network error',
+      message: "Network error",
     };
   }
 }
@@ -155,7 +175,7 @@ export class SessionProgressStream {
       onStatusUpdate?: (status: SessionStatus) => void;
       onCompleted?: (status: SessionStatus, finalProgress: string) => void;
       onError?: (error: string) => void;
-    }
+    },
   ) {
     this.sessionId = sessionId;
     this.onProgress = callbacks.onProgress;
@@ -169,7 +189,7 @@ export class SessionProgressStream {
       return;
     }
 
-    const wsUrl = `${websocketEndpoint.replace('http', 'ws')}/session/stream/${this.sessionId}`;
+    const wsUrl = `${websocketEndpoint.replace("http", "ws")}/session/stream/${this.sessionId}`;
     this.ws = new WebSocket(wsUrl);
 
     this.ws.onopen = () => {
@@ -181,21 +201,21 @@ export class SessionProgressStream {
     this.ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        
+
         switch (data.type) {
-          case 'status':
+          case "status":
             this.onStatusUpdate?.(data.status);
             break;
-            
-          case 'progress':
-            if (typeof data.progress === 'string' && data.progress.length > 0) {
+
+          case "progress":
+            if (typeof data.progress === "string" && data.progress.length > 0) {
               this.sentLength += data.progress.length;
               this.onProgress?.(data.progress);
             }
             break;
-            
-          case 'completed':
-            if (typeof data.progress === 'string') {
+
+          case "completed":
+            if (typeof data.progress === "string") {
               const remaining = data.progress.slice(this.sentLength);
               if (remaining.length > 0) {
                 this.sentLength += remaining.length;
@@ -207,16 +227,16 @@ export class SessionProgressStream {
             }
             this.close(false);
             break;
-            
-          case 'ping':
+
+          case "ping":
             // 心跳响应，无需处理
             break;
-            
+
           default:
-            console.warn('Unknown message type:', data.type);
+            console.warn("Unknown message type:", data.type);
         }
       } catch (error) {
-        console.error('Failed to parse WebSocket message:', error);
+        console.error("Failed to parse WebSocket message:", error);
       }
     };
 
@@ -228,22 +248,27 @@ export class SessionProgressStream {
     };
 
     this.ws.onerror = (error) => {
-      console.error('Session progress stream error:', error);
-      this.onError?.('连接错误，正在尝试重连...');
+      console.error("Session progress stream error:", error);
+      this.onError?.("连接错误，正在尝试重连...");
     };
   }
 
   private attemptReconnect(): void {
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-      this.onError?.('重连失败，请刷新页面或手动重新连接');
+      this.onError?.("重连失败，请刷新页面或手动重新连接");
       return;
     }
 
     this.reconnectAttempts++;
-    const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts - 1), 10000);
-    
-    console.log(`Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`);
-    
+    const delay = Math.min(
+      1000 * Math.pow(2, this.reconnectAttempts - 1),
+      10000,
+    );
+
+    console.log(
+      `Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`,
+    );
+
     setTimeout(() => {
       this.connect();
     }, delay);

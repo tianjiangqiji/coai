@@ -18,7 +18,7 @@ export function useEffectAsync<T>(effect: () => Promise<T>, deps?: any[]) {
   }, deps);
 }
 
-export function useAnimation(
+export function triggerAnimation(
   ref: React.MutableRefObject<any>,
   cls: string,
   min?: number,

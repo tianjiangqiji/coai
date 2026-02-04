@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
 import { Moon, Sun, Monitor } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -43,7 +49,11 @@ export function getTheme() {
 
 // system -> dark -> light -> system
 function getNextTheme(current: Theme): Theme {
-  return current === "system" ? "dark" : current === "dark" ? "light" : "system";
+  return current === "system"
+    ? "dark"
+    : current === "dark"
+      ? "light"
+      : "system";
 }
 
 const initialState: ThemeProviderState = {

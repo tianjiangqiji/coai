@@ -274,7 +274,7 @@ function PriceColumn({
           </span>
         </motion.div>
       );
-    case tokenBilling:
+    case tokenBilling: {
       const inputValue = formatUnitValue(input * unitValue);
       const outputValue = formatUnitValue(output * unitValue);
 
@@ -304,6 +304,7 @@ function PriceColumn({
           </motion.div>
         </div>
       );
+    }
   }
 }
 
@@ -315,7 +316,6 @@ function ModelItem({
   showPricing,
   show1mPricing,
   index,
-  onDrag,
   ...props
 }: ModelProps) {
   const { t } = useTranslation();

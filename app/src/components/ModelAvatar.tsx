@@ -35,7 +35,7 @@ import {
   IconAvatarProps,
   Azure,
   Coze,
-  Dify
+  Dify,
 } from "@lobehub/icons";
 import React from "react";
 import { cn } from "@/components/ui/lib/utils.ts";
@@ -153,21 +153,21 @@ export function hasModelAvatar(model: ModelLike): boolean {
 
 function ModelAvatar({ model, className, size }: ModelAvatarProps) {
   const avatarSize = size ?? 42;
-  
+
   if (isUrl(model.avatar ?? "")) {
     return (
-      <div 
+      <div
         style={{
           width: avatarSize,
           height: avatarSize,
           minWidth: avatarSize,
-          minHeight: avatarSize
+          minHeight: avatarSize,
         }}
         className={cn(
           "relative flex items-center justify-center overflow-hidden",
           // using scale to make the avatar smaller
           className?.includes("h-4") && "scale-[0.85]",
-          className
+          className,
         )}
       >
         <img
@@ -175,7 +175,7 @@ function ModelAvatar({ model, className, size }: ModelAvatarProps) {
           alt={model.name}
           className="rounded-full object-cover w-full h-full"
           style={{
-            transform: className?.includes("h-4") ? "scale(1.15)" : "none"
+            transform: className?.includes("h-4") ? "scale(1.15)" : "none",
           }}
         />
       </div>

@@ -57,10 +57,12 @@ export const ChatAction = ({
   ...props
 }: ChatActionProps) => {
   return (
-    <div className={cn(
-      "transition-all duration-300",
-      !show && "opacity-0 pointer-events-none invisible"
-    )}>
+    <div
+      className={cn(
+        "transition-all duration-300",
+        !show && "opacity-0 pointer-events-none invisible",
+      )}
+    >
       <TooltipProvider>
         <Tooltip delayDuration={250}>
           <TooltipTrigger>
@@ -70,7 +72,8 @@ export const ChatAction = ({
                 variant={`ghost`}
                 className={cn(
                   "group hover:bg-muted-foreground/5 mr-1",
-                  active && `bg-muted-foreground/10 hover:bg-muted-foreground/20`,
+                  active &&
+                    `bg-muted-foreground/10 hover:bg-muted-foreground/20`,
                   className,
                 )}
                 onClick={onClick}
@@ -102,22 +105,17 @@ export function WebAction() {
     <Popover>
       <PopoverTrigger asChild>
         <div>
-          <ChatAction
-            active={web}
-            text={t("chat.web")}
-          >
+          <ChatAction active={web} text={t("chat.web")}>
             <Globe className={cn("h-4 w-4 web", web && "enable")} />
           </ChatAction>
         </div>
       </PopoverTrigger>
-      <PopoverContent
-        className="w-64 p-3"
-        side="top"
-        align="start"
-      >
+      <PopoverContent className="w-64 p-3" side="top" align="start">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label htmlFor="web-search-toggle" className="text-sm">{t("chat.web-search")}</Label>
+            <Label htmlFor="web-search-toggle" className="text-sm">
+              {t("chat.web-search")}
+            </Label>
             <Switch
               id="web-search-toggle"
               checked={web}
@@ -137,7 +135,10 @@ export function WebAction() {
                       <div
                         className={`mt-1.5 flex flex-row items-center rounded-md border scale-80 py-1 px-2`}
                       >
-                        <Icon icon={<Info />} className={`h-3 w-3 mr-1 shrink-0`} />
+                        <Icon
+                          icon={<Info />}
+                          className={`h-3 w-3 mr-1 shrink-0`}
+                        />
                         {t("chat.web-enable-tip")}
                       </div>
                     </div>
@@ -149,10 +150,8 @@ export function WebAction() {
             />
           </div>
 
-          {web && (
-            <></>
-          )}
-          
+          {web && <></>}
+
           <div className="rounded-md bg-muted p-2 text-xs">
             <div className="flex items-center">
               <Icon icon={<Info />} className="h-3 w-3 mr-1 shrink-0" />
@@ -177,19 +176,12 @@ export function ThinkingAction() {
     <Popover>
       <PopoverTrigger asChild>
         <div>
-          <ChatAction
-            active={active}
-            text={t("chat.deep-thinking")}
-          >
+          <ChatAction active={active} text={t("chat.deep-thinking")}>
             <Brain className={cn("h-4 w-4", active && "enable")} />
           </ChatAction>
         </div>
       </PopoverTrigger>
-      <PopoverContent
-        className="w-64 p-3"
-        side="top"
-        align="start"
-      >
+      <PopoverContent className="w-64 p-3" side="top" align="start">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Label htmlFor="deep-thinking-toggle" className="text-sm">

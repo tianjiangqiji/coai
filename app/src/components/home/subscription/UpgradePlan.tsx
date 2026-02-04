@@ -35,15 +35,15 @@ import Tips from "@/components/Tips";
 
 function countPrice(data: Plans, base: number, month: number): number {
   const price = getPlanPrice(data, base) * month;
-  
-  const plan = data.find(p => p.level === base);
+
+  const plan = data.find((p) => p.level === base);
   if (plan && plan.discounts) {
     const discount = plan.discounts[month.toString()];
     if (discount !== undefined) {
       return price * discount;
     }
   }
-  
+
   if (month >= 36) {
     return price * 0.7;
   } else if (month >= 12) {
@@ -66,8 +66,12 @@ function countUpgradePrice(
   return (v > 0 ? v + 1 : 0) + 1; // time count offset
 }
 
-function getDiscountPercent(data: Plans, base: number, month: number): number | null {
-  const plan = data.find(p => p.level === base);
+function getDiscountPercent(
+  data: Plans,
+  base: number,
+  month: number,
+): number | null {
+  const plan = data.find((p) => p.level === base);
   if (plan && plan.discounts) {
     const discount = plan.discounts[month.toString()];
     if (discount !== undefined) {
@@ -209,7 +213,11 @@ export function Upgrade({ level, current, isYearly }: UpgradeProps) {
                 </div>
               </div>
               {(() => {
-                const discount = getDiscountPercent(subscriptionData, level, duration);
+                const discount = getDiscountPercent(
+                  subscriptionData,
+                  level,
+                  duration,
+                );
                 return discount ? (
                   <div className="ml-2 text-xs text-secondary !text-[#55b467] !bg-[#f4fdeb] !border !border-[#55b467]/20 px-1.5 py-0.5 rounded-full">
                     {discount}%

@@ -12,7 +12,7 @@ import React, { useMemo, useRef, useState } from "react";
 import { ConversationInstance } from "@/api/types.tsx";
 import { extractMessage, filterMessage } from "@/utils/processor.ts";
 import { copyClipboard } from "@/utils/dom.ts";
-import { useEffectAsync, useAnimation } from "@/utils/hook.ts";
+import { useEffectAsync, triggerAnimation } from "@/utils/hook.ts";
 import { mobile, openWindow } from "@/utils/device.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { selectMenu, setMenu } from "@/store/menu.ts";
@@ -166,7 +166,7 @@ function SidebarAction({
             id={`refresh`}
             ref={refreshRef}
             onClick={() => {
-              const hook = useAnimation(refreshRef, "active", 500);
+              const hook = triggerAnimation(refreshRef, "active", 500);
               refreshAction().finally(hook);
             }}
           >
@@ -439,11 +439,14 @@ function SideBar() {
         )}
 
         {loadingConversation !== -1 && (
-          <div className={cn("mt-2 px-2 py-2 rounded-md bg-background/70 border flex items-center gap-2")}
-               onClick={(e) => {
-                 e.preventDefault();
-                 e.stopPropagation();
-               }}
+          <div
+            className={cn(
+              "mt-2 px-2 py-2 rounded-md bg-background/70 border flex items-center gap-2",
+            )}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
           >
             <Loader2 className={cn("h-4 w-4 animate-spin")} />
             <div className={cn("text-xs text-secondary")}>{t("loading")}</div>

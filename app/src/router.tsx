@@ -36,12 +36,8 @@ const AdminBroadcast = lazyFactor(() => import("@/routes/admin/Broadcast.tsx"));
 const AdminSubscription = lazyFactor(
   () => import("@/routes/admin/Subscription.tsx"),
 );
-const AdminRecord = lazyFactor(
-  () => import("@/routes/admin/Record.tsx"),
-);
-const AdminPayment = lazyFactor(
-  () => import("@/routes/admin/Payment.tsx"),
-);
+const AdminRecord = lazyFactor(() => import("@/routes/admin/Record.tsx"));
+const AdminPayment = lazyFactor(() => import("@/routes/admin/Payment.tsx"));
 const AdminLogger = lazyFactor(() => import("@/routes/admin/Logger.tsx"));
 
 const router = createBrowserRouter([

@@ -115,7 +115,9 @@ function Record() {
     update();
   }
 
-  function getTypeColor(type: string): "default" | "secondary" | "destructive" | "outline" {
+  function getTypeColor(
+    type: string,
+  ): "default" | "secondary" | "destructive" | "outline" {
     switch (type) {
       case "consume":
       case "conversation":
@@ -140,9 +142,7 @@ function Record() {
       case "invitation":
         return `+${log.quota_change.toFixed(2)} ${t("record.quota")}`;
       case "payment":
-        return log.amount
-          ? `${log.amount.toFixed(2)} CNY`
-          : "-";
+        return log.amount ? `${log.amount.toFixed(2)} CNY` : "-";
       case "subscription":
         return `${log.amount.toFixed(2)} CNY (Level ${log.subscription_level})`;
       default:
@@ -159,7 +159,9 @@ function Record() {
         }
         return `${log.model} (${log.input_tokens}→${log.output_tokens} tokens)`;
       case "subscription":
-        return log.subscription_months ? `${log.subscription_months} ${t("month")}` : log.detail || "-";
+        return log.subscription_months
+          ? `${log.subscription_months} ${t("month")}`
+          : log.detail || "-";
       default:
         return log.detail || "-";
     }
@@ -189,12 +191,24 @@ function Record() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t("record.types.all")}</SelectItem>
-                  <SelectItem value="consume">{t("record.types.consume")}</SelectItem>
-                  <SelectItem value="recharge">{t("record.types.recharge")}</SelectItem>
-                  <SelectItem value="payment">{t("record.types.payment")}</SelectItem>
-                  <SelectItem value="subscription">{t("record.types.subscription")}</SelectItem>
-                  <SelectItem value="redeem">{t("record.types.redeem")}</SelectItem>
-                  <SelectItem value="invitation">{t("record.types.invitation")}</SelectItem>
+                  <SelectItem value="consume">
+                    {t("record.types.consume")}
+                  </SelectItem>
+                  <SelectItem value="recharge">
+                    {t("record.types.recharge")}
+                  </SelectItem>
+                  <SelectItem value="payment">
+                    {t("record.types.payment")}
+                  </SelectItem>
+                  <SelectItem value="subscription">
+                    {t("record.types.subscription")}
+                  </SelectItem>
+                  <SelectItem value="redeem">
+                    {t("record.types.redeem")}
+                  </SelectItem>
+                  <SelectItem value="invitation">
+                    {t("record.types.invitation")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -238,7 +252,9 @@ function Record() {
           <AlertDialog open={clearDialogOpen} onOpenChange={setClearDialogOpen}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>{t("admin.clear-usage-log-title")}</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {t("admin.clear-usage-log-title")}
+                </AlertDialogTitle>
                 <AlertDialogDescription>
                   {t("admin.clear-usage-log-description")}
                 </AlertDialogDescription>

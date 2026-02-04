@@ -69,7 +69,9 @@ export async function getUsageLogList(
   }
 }
 
-export async function clearUsageLog(password: string): Promise<UsageLogResponse> {
+export async function clearUsageLog(
+  password: string,
+): Promise<UsageLogResponse> {
   try {
     const response = await axios.post("/admin/usage/clear", {
       password: password,

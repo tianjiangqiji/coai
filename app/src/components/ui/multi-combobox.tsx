@@ -93,10 +93,14 @@ export function MultiCombobox({
                 value={key}
                 onSelect={(current) => {
                   // keep original case
-                  const originalItem = valueList.find(item => item.toLowerCase() === current.toLowerCase());
+                  const originalItem = valueList.find(
+                    (item) => item.toLowerCase() === current.toLowerCase(),
+                  );
                   if (!originalItem) return;
 
-                  const existingIndex = v.findIndex(item => item.toLowerCase() === current.toLowerCase());
+                  const existingIndex = v.findIndex(
+                    (item) => item.toLowerCase() === current.toLowerCase(),
+                  );
                   if (existingIndex !== -1) {
                     onChange(v.filter((_, index) => index !== existingIndex));
                   } else {
@@ -107,14 +111,16 @@ export function MultiCombobox({
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    v.some(item => item.toLowerCase() === key.toLowerCase()) ? "opacity-100" : "opacity-0",
+                    v.some((item) => item.toLowerCase() === key.toLowerCase())
+                      ? "opacity-100"
+                      : "opacity-0",
                   )}
                 />
                 {listTranslateFormatter
                   ? listTranslateFormatter(key)
                   : listTranslate
-                  ? t(`${listTranslate}.${key}`)
-                  : key}
+                    ? t(`${listTranslate}.${key}`)
+                    : key}
               </CommandItem>
             ))}
           </CommandList>

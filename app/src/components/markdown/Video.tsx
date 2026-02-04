@@ -28,12 +28,7 @@ type VideoProps = React.VideoHTMLAttributes<HTMLVideoElement> & {
   alt?: string;
 };
 
-export default function Video({
-  src,
-  alt,
-  className,
-  ...props
-}: VideoProps) {
+export default function Video({ src, alt, className, ...props }: VideoProps) {
   const { t } = useTranslation();
   const copy = useClipboard();
   const token = useSelector((state: RootState) => state.auth.token);
@@ -180,7 +175,10 @@ export default function Video({
         <div className={`flex flex-col items-center`}>
           {videoUrl && (
             <video
-              className={cn(className, "rounded-md select-none outline-none max-w-full max-h-[80vh]")}
+              className={cn(
+                className,
+                "rounded-md select-none outline-none max-w-full max-h-[80vh]",
+              )}
               src={videoUrl}
               controls
               preload="auto"
@@ -196,7 +194,7 @@ export default function Video({
             >
               <Copy className={`h-3.5 w-3.5`} />
             </button>
-            {src || ''}
+            {src || ""}
           </span>
         </div>
       </DialogContent>

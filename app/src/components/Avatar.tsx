@@ -111,10 +111,10 @@ function Avatar({ username, ...props }: AvatarProps) {
     useDeeptrain && username.length > 0
       ? `${deeptrainApiEndpoint}/avatar/${username}`
       : hasAvatar && cachedAvatarBlob
-      ? URL.createObjectURL(cachedAvatarBlob)
-      : hasAvatar && userInfo.email
-      ? getGravatarUrl(userInfo.email)
-      : "";
+        ? URL.createObjectURL(cachedAvatarBlob)
+        : hasAvatar && userInfo.email
+          ? getGravatarUrl(userInfo.email)
+          : "";
 
   return avatarSrc ? (
     <img

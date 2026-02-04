@@ -4,8 +4,7 @@ import { cn } from "./lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import Icon from "@/components/utils/Icon.tsx";
 
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   smallSize?: boolean;
   classNameWrapper?: string;
 }

@@ -154,12 +154,14 @@ function reducer(state: MarketForm, action: any): MarketForm {
         })),
         ...state,
       ];
-    case "remove":
-      let { idx } = action.payload;
+    case "remove": {
+      const { idx } = action.payload;
       return [...state.slice(0, idx), ...state.slice(idx + 1)];
-    case "update":
-      let { index, data } = action.payload;
+    }
+    case "update": {
+      const { index, data } = action.payload;
       return [...state.slice(0, index), data, ...state.slice(index + 1)];
+    }
     case "update-id":
       return [
         ...state.map((model, idx) => {
@@ -304,11 +306,12 @@ function reducer(state: MarketForm, action: any): MarketForm {
           return model;
         }),
       ];
-    case "replace":
+    case "replace": {
       const { from, to } = action.payload;
       const [removed] = state.splice(from, 1);
       state.splice(to, 0, removed);
       return [...state];
+    }
     case "add-below":
       return [
         ...state.slice(0, action.payload.idx + 1),
@@ -339,12 +342,13 @@ function reducer(state: MarketForm, action: any): MarketForm {
       state[action.payload.idx] = state[action.payload.idx + 1];
       state[action.payload.idx + 1] = downward;
       return [...state];
-    case "move":
+    case "move": {
       const { fromIndex, toIndex } = action.payload;
       const moved = state[fromIndex];
       state.splice(fromIndex, 1);
       state.splice(toIndex, 0, moved);
       return [...state];
+    }
     default:
       throw new Error();
   }

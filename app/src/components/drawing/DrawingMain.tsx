@@ -77,14 +77,19 @@ export default function DrawingMain({
 
   return (
     <motion.div
-      className={cn("drawing-main flex-1 flex flex-col h-full bg-background relative overflow-hidden w-full items-center", className)}
+      className={cn(
+        "drawing-main flex-1 flex flex-col h-full bg-background relative overflow-hidden w-full items-center",
+        className,
+      )}
       initial={{ opacity: 0, x: 24 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
     >
-      <div className={cn(
-        "drawing-main-board flex-1 overflow-hidden p-4 md:p-6 flex flex-col items-center justify-center w-full max-w-7xl min-h-0 mx-auto"
-      )}>
+      <div
+        className={cn(
+          "drawing-main-board flex-1 overflow-hidden p-4 md:p-6 flex flex-col items-center justify-center w-full max-w-7xl min-h-0 mx-auto",
+        )}
+      >
         {status === "running" && (
           <div className="drawing-progress-card flex flex-col items-center gap-4 p-8 rounded-2xl border bg-card/50 backdrop-blur-sm">
             <Loader2 className="w-10 h-10 animate-spin text-primary" />
@@ -99,7 +104,11 @@ export default function DrawingMain({
               <p className="drawing-error-title text-lg font-semibold">
                 {t("drawing.errorMessage")}
               </p>
-              {error && <p className="drawing-error-desc text-sm opacity-80 mt-1">{error}</p>}
+              {error && (
+                <p className="drawing-error-desc text-sm opacity-80 mt-1">
+                  {error}
+                </p>
+              )}
             </div>
           </div>
         )}
@@ -119,7 +128,7 @@ export default function DrawingMain({
                       setScale(1);
                     }}
                   />
-                  
+
                   {images.length > 1 && (
                     <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-2 pointer-events-none z-[10]">
                       <Button
@@ -179,11 +188,17 @@ export default function DrawingMain({
                         key={url}
                         className={cn(
                           "w-10 h-10 md:w-14 md:h-14 rounded-lg overflow-hidden border-2 transition-all shrink-0",
-                          index === currentIndex ? "border-primary scale-105" : "border-transparent opacity-50 hover:opacity-100"
+                          index === currentIndex
+                            ? "border-primary scale-105"
+                            : "border-transparent opacity-50 hover:opacity-100",
                         )}
                         onClick={() => setCurrentIndex(index)}
                       >
-                        <img src={url} alt="" className="w-full h-full object-cover" />
+                        <img
+                          src={url}
+                          alt=""
+                          className="w-full h-full object-cover"
+                        />
                       </button>
                     ))}
                   </div>
@@ -213,7 +228,9 @@ export default function DrawingMain({
               <ImageIcon className="w-10 h-10 text-primary opacity-50" />
             </div>
             <h2 className="text-2xl font-bold">{t("drawing.mainTitle")}</h2>
-            <p className="text-muted-foreground leading-relaxed">{t("drawing.mainDesc")}</p>
+            <p className="text-muted-foreground leading-relaxed">
+              {t("drawing.mainDesc")}
+            </p>
           </div>
         )}
       </div>
@@ -248,13 +265,18 @@ export default function DrawingMain({
               className="max-w-full max-h-full object-contain pointer-events-auto select-none"
               style={{ scale }}
               drag
-              dragConstraints={{ left: -2000, right: 2000, top: -2000, bottom: 2000 }}
+              dragConstraints={{
+                left: -2000,
+                right: 2000,
+                top: -2000,
+                bottom: 2000,
+              }}
               dragElastic={0.2}
               dragMomentum={false}
               dragTransition={{ power: 0, timeConstant: 0 }}
               key={`${currentIndex}-${resetKey}`} // 切换图片或点击复原时重置位置
             />
-            
+
             {/* 左右切换按钮 - 始终固定在两侧，不受图片拖拽影响 */}
             {images.length > 1 && (
               <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-6 pointer-events-none z-[130]">
@@ -283,7 +305,7 @@ export default function DrawingMain({
                 variant="ghost"
                 size="icon"
                 className="text-white/80 hover:text-white hover:bg-white/10 rounded-full w-10 h-10"
-                onClick={() => setScale(s => Math.max(s - 0.5, 0.5))}
+                onClick={() => setScale((s) => Math.max(s - 0.5, 0.5))}
               >
                 <ZoomOut className="w-5 h-5" />
               </Button>
@@ -299,7 +321,7 @@ export default function DrawingMain({
                 variant="ghost"
                 size="icon"
                 className="text-white/80 hover:text-white hover:bg-white/10 rounded-full w-10 h-10"
-                onClick={() => setScale(s => Math.min(s + 0.5, 5))}
+                onClick={() => setScale((s) => Math.min(s + 0.5, 5))}
               >
                 <ZoomIn className="w-5 h-5" />
               </Button>

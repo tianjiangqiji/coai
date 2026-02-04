@@ -12,9 +12,7 @@ type ScrollActionProps = {
   target: HTMLElement | null;
 };
 
-function ScrollAction(
-  { target, visible, setVisibility }: ScrollActionProps,
-) {
+function ScrollAction({ target, visible, setVisibility }: ScrollActionProps) {
   const { t } = useTranslation();
   const messages: Message[] = useMessages();
 

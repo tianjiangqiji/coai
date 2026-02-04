@@ -14,8 +14,8 @@ export function Reference({ url, children }: ReferenceProps): JSX.Element {
   };
 
   return (
-    <Badge 
-      variant="outline" 
+    <Badge
+      variant="outline"
       className="reference-badge inline-flex items-center py-1 px-2 gap-1.5 
                 hover:bg-primary/10 cursor-pointer transition-colors 
                 rounded-md border border-primary/30 text-primary-foreground

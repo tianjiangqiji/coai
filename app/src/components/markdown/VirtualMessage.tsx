@@ -79,10 +79,10 @@ function getVirualPrompt(command: string) {
 
 function GetI18nPrompt({ command }: { command: string }) {
   const { t } = useTranslation();
-  
+
   const prompt = getVirualPrompt(command);
   if (!prompt) return null;
-  
+
   return <>{t(prompt)}</>;
 }
 
@@ -150,22 +150,25 @@ export function VirtualMessage({ message, children }: VirtualMessageProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   const { prompt, model } = parseMessage(message);
-  
+
   if (prompt === "reference") {
     const handleClick = (e: React.MouseEvent) => {
       e.preventDefault();
       let targetUrl = decodeURIComponent(model);
-      if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
-        targetUrl = 'https://' + targetUrl;
+      if (
+        !targetUrl.startsWith("http://") &&
+        !targetUrl.startsWith("https://")
+      ) {
+        targetUrl = "https://" + targetUrl;
       }
       window.open(targetUrl, "_blank", "noopener,noreferrer");
     };
-    
+
     return (
-      <span 
+      <span
         className={`inline-flex items-center justify-center h-[18px] px-[6px] py-0
                   text-[12px] font-normal 
-                  ${isHovered ? 'bg-[#d0d0d0] text-[#202020]' : 'bg-[#e5e5e5] text-[#404040]'}
+                  ${isHovered ? "bg-[#d0d0d0] text-[#202020]" : "bg-[#e5e5e5] text-[#404040]"}
                   rounded-[9px] cursor-pointer relative -top-[2px] ml-1
                   font-variant-numeric tabular-nums align-middle flex-shrink-0
                   transition-colors duration-150`}

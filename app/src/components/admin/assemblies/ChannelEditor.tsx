@@ -462,10 +462,14 @@ function ChannelEditor({
           <Paragraph title={t("admin.channels.advanced")} isCollapsed={true}>
             <ParagraphItem>
               <div className={`channel-row column-layout`}>
-                <div className={`channel-content flex flex-row items-center justify-between w-full`}>
+                <div
+                  className={`channel-content flex flex-row items-center justify-between w-full`}
+                >
                   <div className={`flex flex-row items-center gap-1`}>
                     {t("admin.channels.first-message-as-user")}
-                    <Tips content={t("admin.channels.first-message-as-user-tip")} />
+                    <Tips
+                      content={t("admin.channels.first-message-as-user-tip")}
+                    />
                   </div>
                   <Switch
                     checked={edit.first_message_as_user || false}
@@ -482,15 +486,24 @@ function ChannelEditor({
             <ParagraphSpace />
             <ParagraphItem>
               <div className={`channel-row column-layout`}>
-                <div className={`channel-content flex flex-row items-center justify-between w-full`}>
+                <div
+                  className={`channel-content flex flex-row items-center justify-between w-full`}
+                >
                   <div className={`flex flex-row items-center gap-1`}>
                     {t("admin.channels.merge-consecutive-user-messages")}
-                    <Tips content={t("admin.channels.merge-consecutive-user-messages-tip")} />
+                    <Tips
+                      content={t(
+                        "admin.channels.merge-consecutive-user-messages-tip",
+                      )}
+                    />
                   </div>
                   <Switch
                     checked={edit.merge_consecutive_user_messages || false}
                     onCheckedChange={(value) =>
-                      dispatch({ type: "set-merge-consecutive-user-messages", value })
+                      dispatch({
+                        type: "set-merge-consecutive-user-messages",
+                        value,
+                      })
                     }
                   />
                 </div>

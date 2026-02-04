@@ -37,10 +37,10 @@ export function useGroup(countAdminLevel?: boolean): string {
       default:
         return NormalType;
     }
-  }, [auth, level, admin]);
+  }, [auth, level, admin, countAdminLevel]);
 }
 
-export function hitGroup(group: string[]): boolean {
+export function useHitGroup(group: string[]): boolean {
   const current = useGroup();
   const admin = useSelector(selectAdmin);
 

@@ -181,25 +181,25 @@ export function getFilenameFromURL(url: string | undefined): string {
 
 export function formatDecimal(value: number): string {
   if (value === 0) return "0.000";
-  
+
   if (Number.isInteger(value)) {
     return value.toFixed(3);
   }
-  
+
   const str = value.toString();
-  if (str.includes('e')) {
-    const [, exp] = str.split('e');
+  if (str.includes("e")) {
+    const [, exp] = str.split("e");
     const expNum = parseInt(exp);
     if (expNum < 0) {
       return value.toFixed(Math.abs(expNum));
     }
   }
-  
-  const parts = str.split('.');
+
+  const parts = str.split(".");
   if (parts.length === 2) {
     const decimalPlaces = Math.max(3, parts[1].length);
-    return value.toFixed(decimalPlaces).replace(/\.?0+$/, '');
+    return value.toFixed(decimalPlaces).replace(/\.?0+$/, "");
   }
-  
+
   return value.toFixed(3);
 }

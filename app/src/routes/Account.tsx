@@ -35,11 +35,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { useEffectAsync } from "@/utils/hook.ts";
-import {
-  getUserInfo,
-  initialUserInfo,
-  UserInfo,
-} from "@/api/auth.ts";
+import { getUserInfo, initialUserInfo, UserInfo } from "@/api/auth.ts";
 import { CommonResponse, withNotify } from "@/api/common.ts";
 import { goAuth } from "@/utils/app.ts";
 import { quotaSelector } from "@/store/quota.ts";

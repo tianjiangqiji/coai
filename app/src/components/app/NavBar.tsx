@@ -84,7 +84,10 @@ function NavBar() {
         />
         <div className={`grow`} />
         <ProjectLink />
-        <ThemeToggle size="icon-md" className={`rounded-full overflow-hidden`} />
+        <ThemeToggle
+          size="icon-md"
+          className={`rounded-full overflow-hidden`}
+        />
         <Button
           size={`icon-md`}
           variant={`outline`}

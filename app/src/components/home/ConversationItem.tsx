@@ -23,7 +23,10 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { ConversationInstance } from "@/api/types.tsx";
 import { useState } from "react";
-import { selectLoadingConversation, useConversationActions } from "@/store/chat.ts";
+import {
+  selectLoadingConversation,
+  useConversationActions,
+} from "@/store/chat.ts";
 import { cn } from "@/components/ui/lib/utils.ts";
 import PopupDialog, { popupTypes } from "@/components/PopupDialog.tsx";
 import { withNotify } from "@/api/common.ts";
@@ -84,7 +87,9 @@ function ConversationItem({
       }}
     >
       {switching ? (
-        <Loader2 className={`h-6 w-6 p-1 mr-1 text-secondary bg-input/25 rounded-sm animate-spin`} />
+        <Loader2
+          className={`h-6 w-6 p-1 mr-1 text-secondary bg-input/25 rounded-sm animate-spin`}
+        />
       ) : (
         <MessageSquare
           className={`h-6 w-6 p-1 mr-1 text-secondary bg-input/25 rounded-sm`}

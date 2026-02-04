@@ -31,7 +31,11 @@ export default function ({ href, children }: LinkProps) {
 
   if (url.startsWith("https://coai.virtual/reference::")) {
     const referenceUrl = url.slice("https://coai.virtual/reference::".length);
-    return <VirtualMessage message={`reference::${referenceUrl}`}>{children}</VirtualMessage>;
+    return (
+      <VirtualMessage message={`reference::${referenceUrl}`}>
+        {children}
+      </VirtualMessage>
+    );
   }
 
   if (url.startsWith("https://coai.virtual")) {

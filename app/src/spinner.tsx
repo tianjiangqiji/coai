@@ -22,7 +22,7 @@ function Spinner() {
           break;
       }
     });
-  }, []);
+  }, [dispatch]);
 
   const isAnimating = useSelector(selectIsTasking);
 

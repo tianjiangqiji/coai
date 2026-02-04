@@ -191,10 +191,7 @@ function reducer(state: PlanConfig, action: Record<string, any>): PlanConfig {
           if (plan.level === action.payload.level) {
             return {
               ...plan,
-              items: [
-                ...plan.items,
-                action.payload.item,
-              ],
+              items: [...plan.items, action.payload.item],
             };
           }
           return plan;
@@ -276,7 +273,7 @@ function reducer(state: PlanConfig, action: Record<string, any>): PlanConfig {
           return plan;
         }),
       };
-    case "import-item":
+    case "import-item": {
       const { level, id, target } = action.payload;
       const plan = state.plans.find((p: Plan) => p.level === level);
       const item = plan?.items.find((i: PlanItem) => i.id === id);
@@ -296,6 +293,7 @@ function reducer(state: PlanConfig, action: Record<string, any>): PlanConfig {
           return p;
         }),
       };
+    }
     case "set-discount":
       return {
         ...state,
@@ -618,36 +616,36 @@ function PlanConfig() {
                     />
                   </div>
 
-                      {!stacked && item.id !== "web_search" && (
-                        <div className={`plan-editor-row`}>
-                          <p className={`plan-editor-label mr-2`}>
-                            {t(`admin.plan.item-models`)}
-                            <Tips content={t("admin.plan.item-models-tip")} />
-                          </p>
-                          <MultiCombobox
-                            align={`start`}
-                            value={item.models}
-                            onChange={(value: string[]) => {
-                              formDispatch({
-                                type: "set-item-models",
-                                payload: {
-                                  level: plan.level,
-                                  models: value,
-                                  index,
-                                },
-                              });
-                            }}
-                            placeholder={t(`admin.plan.item-models-placeholder`, {
-                              length: item.models.length,
-                            })}
-                            searchPlaceholder={t(
-                              `admin.plan.item-models-search-placeholder`,
-                            )}
-                            list={channelModels}
-                            className={`w-full max-w-full`}
-                          />
-                        </div>
-                      )}
+                  {!stacked && item.id !== "web_search" && (
+                    <div className={`plan-editor-row`}>
+                      <p className={`plan-editor-label mr-2`}>
+                        {t(`admin.plan.item-models`)}
+                        <Tips content={t("admin.plan.item-models-tip")} />
+                      </p>
+                      <MultiCombobox
+                        align={`start`}
+                        value={item.models}
+                        onChange={(value: string[]) => {
+                          formDispatch({
+                            type: "set-item-models",
+                            payload: {
+                              level: plan.level,
+                              models: value,
+                              index,
+                            },
+                          });
+                        }}
+                        placeholder={t(`admin.plan.item-models-placeholder`, {
+                          length: item.models.length,
+                        })}
+                        searchPlaceholder={t(
+                          `admin.plan.item-models-search-placeholder`,
+                        )}
+                        list={channelModels}
+                        className={`w-full max-w-full`}
+                      />
+                    </div>
+                  )}
                   <div
                     className={cn(
                       `flex flex-row gap-1`,
@@ -725,18 +723,30 @@ function PlanConfig() {
             <div className="mt-6 border-t pt-4">
               <p className={`plan-config-title flex items-center`}>
                 {t("admin.plan.discounts")}
-                <Tips content={t("admin.plan.discounts-tip")} className="ml-1" />
+                <Tips
+                  content={t("admin.plan.discounts-tip")}
+                  className="ml-1"
+                />
               </p>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
                 {[1, 3, 6, 12, 36].map((month) => {
-                  const hasDiscount = plan.discounts && plan.discounts[month.toString()] !== undefined;
-                  const discountValue = hasDiscount ? plan.discounts?.[month.toString()] : null;
-                  
+                  const hasDiscount =
+                    plan.discounts &&
+                    plan.discounts[month.toString()] !== undefined;
+                  const discountValue = hasDiscount
+                    ? plan.discounts?.[month.toString()]
+                    : null;
+
                   return (
-                    <div key={month} className="flex flex-col space-y-2 p-3 border rounded-md">
+                    <div
+                      key={month}
+                      className="flex flex-col space-y-2 p-3 border rounded-md"
+                    >
                       <div className="flex justify-between items-center">
-                        <span className="font-medium">{t(`sub.time.${month}`)}</span>
+                        <span className="font-medium">
+                          {t(`sub.time.${month}`)}
+                        </span>
                         <Switch
                           checked={hasDiscount}
                           onCheckedChange={(checked) => {
@@ -751,30 +761,30 @@ function PlanConfig() {
                               } else if (month === 3) {
                                 discountPercent = 2; // 为3个月设置默认5%折扣
                               }
-                              
-                              const discountFactor = 1 - (discountPercent / 100);
-                              
+
+                              const discountFactor = 1 - discountPercent / 100;
+
                               formDispatch({
                                 type: "set-discount",
-                                payload: { 
-                                  level: plan.level, 
+                                payload: {
+                                  level: plan.level,
                                   month: month.toString(),
-                                  value: discountFactor
+                                  value: discountFactor,
                                 },
                               });
                             } else {
                               formDispatch({
                                 type: "remove-discount",
-                                payload: { 
-                                  level: plan.level, 
-                                  month: month.toString() 
+                                payload: {
+                                  level: plan.level,
+                                  month: month.toString(),
                                 },
                               });
                             }
                           }}
                         />
                       </div>
-                      
+
                       {hasDiscount && (
                         <div className="mt-2">
                           <div className="flex items-center justify-between">
@@ -782,23 +792,26 @@ function PlanConfig() {
                               {t("admin.plan.discount-value")}
                             </span>
                             <span className="text-sm font-medium">
-                              {Math.round((1 - (discountValue || 1)) * 100)}% {t("admin.plan.discount-off")}
+                              {Math.round((1 - (discountValue || 1)) * 100)}%{" "}
+                              {t("admin.plan.discount-off")}
                             </span>
                           </div>
                           <div className="mt-2">
                             <NumberInput
-                              value={Math.round((1 - (discountValue || 1)) * 100)}
+                              value={Math.round(
+                                (1 - (discountValue || 1)) * 100,
+                              )}
                               min={0}
                               max={90}
                               step={5}
                               onValueChange={(value) => {
-                                const discountFactor = 1 - (value / 100);
+                                const discountFactor = 1 - value / 100;
                                 formDispatch({
                                   type: "set-discount",
-                                  payload: { 
-                                    level: plan.level, 
+                                  payload: {
+                                    level: plan.level,
                                     month: month.toString(),
-                                    value: discountFactor
+                                    value: discountFactor,
                                   },
                                 });
                               }}
